@@ -4,7 +4,11 @@ Official Python client for the MonkeyLearn API. Build and consume machine learni
 Install
 -------
 
-To install the library just type the following on your shell:
+You can use pip to install the library:
+
+    pip install monkeylearn
+
+Or clone the code and type the following on your shell:
 
     python setup.py install
 
