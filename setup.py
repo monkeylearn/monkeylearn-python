@@ -7,7 +7,7 @@ setup(
     version='0.1.1',
     author='MonkeyLearn',
     author_email='hello@monkeylearn.com',
-    description='',
+    description='Official Python client for the MonkeyLearn API',
     url='https://github.com/monkeylearn/monkeylearn-python',
     download_url='https://github.com/monkeylearn/monkeylearn-python/tarball/v0.1.1',
     keywords=['monkeylearn', 'machine learning', 'python'],
