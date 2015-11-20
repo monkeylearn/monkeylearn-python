@@ -6,6 +6,7 @@ import requests
 import json
 import time
 import re
+import six
 
 from monkeylearn.settings import (MAX_BATCH_SIZE, MIN_BATCH_SIZE)
 from monkeylearn.exceptions import MonkeyLearnException
@@ -57,10 +58,21 @@ class HandleErrorsMixin(object):
         if batch_size > MAX_BATCH_SIZE or batch_size < MIN_BATCH_SIZE:
             raise MonkeyLearnException('batch_size has to be between {0} and {1}'.format(
                                        MIN_BATCH_SIZE, MAX_BATCH_SIZE))
+        if not text_list:
+            raise MonkeyLearnException('The text_list can\'t be empty.')
         if '' in text_list:
             raise MonkeyLearnException('You have an empty text in position {0} in text_list'.format(
                                        text_list.index('')))
+        for i, text in enumerate(text_list):
+            if not isinstance(text, six.string_types):
+                raise MonkeyLearnException(
+                    'Element in position {0} in text_list must be a string.'.format(i)
+                )
 
     def handle_errors(self, response):
         if not response.ok:
-            raise MonkeyLearnException(response.json()['detail'])
+            try:
+                res = response.json()
+            except ValueError:
+                response.raise_for_status()
+            raise MonkeyLearnException(json.dumps(res['detail']))

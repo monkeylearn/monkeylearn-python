@@ -18,16 +18,8 @@ setup(
     package_dir={'': '.'},
     packages=find_packages('.'),
     install_requires=[
-        'requests==2.8.1',
-        'cffi==1.2.1',
-        'cryptography==1.0.2',
-        'enum34==1.0.4',
-        'idna==2.0',
-        'ipaddress==1.0.14',
-        'ndg-httpsclient==0.4.0',
-        'pyOpenSSL==0.15.1',
-        'pyasn1==0.1.9',
-        'pycparser==2.14',
-        'six==1.10.0',
+        # use "pip install requests[security]" for taking out the warnings
+        'requests>=2.8.1',
+        'six>=1.10.0',
     ],
 )
