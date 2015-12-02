@@ -3,14 +3,14 @@ from __future__ import (
     print_function, unicode_literals, division, absolute_import)
 
 from monkeylearn.utils import SleepRequestsMixin, MonkeyLearnResponse, HandleErrorsMixin
-from monkeylearn.settings import PIPELINES_ENDPOINT
+from monkeylearn.settings import DEFAULT_BASE_ENDPOINT
 from monkeylearn.exceptions import MonkeyLearnException
 
 class Pipelines(SleepRequestsMixin, HandleErrorsMixin):
 
-    def __init__(self, token):
+    def __init__(self, token, base_endpoint=DEFAULT_BASE_ENDPOINT):
         self.token = token
-        self.endpoint = PIPELINES_ENDPOINT
+        self.endpoint = base_endpoint + 'pipelines/'
 
     def run(self, module_id, data, sandbox=False, sleep_if_throttled=True):
         if not isinstance(data, dict):
