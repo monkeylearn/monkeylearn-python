@@ -12,9 +12,9 @@ setup(
     download_url='https://github.com/monkeylearn/monkeylearn-python/tarball/v0.1.1',
     keywords=['monkeylearn', 'machine learning', 'python'],
     classifiers=[
-        'Development Status :: 3 - Alpha',
-        'Programming Language :: Python :: 2 :: Only',
-        'Programming Language :: Python',
+        'Development Status :: 4 - Beta',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 3',
     ],
     package_dir={'': '.'},
     packages=find_packages('.'),

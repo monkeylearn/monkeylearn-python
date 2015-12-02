@@ -2,6 +2,8 @@
 from __future__ import (
     print_function, unicode_literals, division, absolute_import)
 
+from six.moves import range
+
 from monkeylearn.utils import SleepRequestsMixin, MonkeyLearnResponse, HandleErrorsMixin
 from monkeylearn.settings import EXTRACTION_ENDPOINT, DEFAULT_BATCH_SIZE
 
@@ -18,7 +20,7 @@ class Extraction(SleepRequestsMixin, HandleErrorsMixin):
         url = self.endpoint + module_id + '/extract/'
         res = []
         responses = []
-        for i in xrange(0, len(text_list), batch_size):
+        for i in range(0, len(text_list), batch_size):
             data = {
                 'text_list': text_list[i:i+batch_size]
             }
