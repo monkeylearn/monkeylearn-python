@@ -2,6 +2,9 @@
 from __future__ import (
     print_function, unicode_literals, division, absolute_import)
 
+import six
+from six.moves import range
+
 from monkeylearn.utils import SleepRequestsMixin, MonkeyLearnResponse, HandleErrorsMixin
 from monkeylearn.settings import CLASSIFICATION_ENDPOINT, DEFAULT_BATCH_SIZE
 
@@ -25,7 +28,7 @@ class Classification(SleepRequestsMixin, HandleErrorsMixin):
             url += '?sandbox=1'
         res = []
         responses = []
-        for i in xrange(0, len(text_list), batch_size):
+        for i in range(0, len(text_list), batch_size):
             data = {
                 'text_list': text_list[i:i+batch_size]
             }
@@ -93,7 +96,7 @@ class Classification(SleepRequestsMixin, HandleErrorsMixin):
             "text_type": text_type,
             "permissions": permissions
         }
-        data = {key: value for key, value in data.iteritems() if value is not None}
+        data = {key: value for key, value in six.iteritems(data) if value is not None}
 
         url = self.endpoint
         response = self.make_request(url, 'POST', data, sleep_if_throttled)
@@ -122,7 +125,7 @@ class Categories(SleepRequestsMixin, HandleErrorsMixin):
             'name': name,
             'parent_id': parent_id
         }
-        data = {key: value for key, value in data.iteritems() if value is not None}
+        data = {key: value for key, value in six.iteritems(data) if value is not None}
         response = self.make_request(url, 'PATCH', data, sleep_if_throttled)
         self.handle_errors(response)
         return MonkeyLearnResponse(response.json()['result'], [response])
@@ -134,7 +137,7 @@ class Categories(SleepRequestsMixin, HandleErrorsMixin):
             'samples-strategy': samples_strategy,
             'samples-category-id': samples_category_id
         }
-        data = {key: value for key, value in data.iteritems() if value is not None}
+        data = {key: value for key, value in six.iteritems(data) if value is not None}
         response = self.make_request(url, 'DELETE', data, sleep_if_throttled)
         self.handle_errors(response)
         return MonkeyLearnResponse(response.json()['result'], [response])
