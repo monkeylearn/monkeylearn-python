@@ -5,13 +5,13 @@ from __future__ import (
 from six.moves import range
 
 from monkeylearn.utils import SleepRequestsMixin, MonkeyLearnResponse, HandleErrorsMixin
-from monkeylearn.settings import EXTRACTION_ENDPOINT, DEFAULT_BATCH_SIZE
+from monkeylearn.settings import DEFAULT_BASE_ENDPOINT, DEFAULT_BATCH_SIZE
 
 class Extraction(SleepRequestsMixin, HandleErrorsMixin):
 
-    def __init__(self, token):
+    def __init__(self, token, base_endpoint=DEFAULT_BASE_ENDPOINT):
         self.token = token
-        self.endpoint = EXTRACTION_ENDPOINT
+        self.endpoint = base_endpoint + 'extractors/'
 
     def extract(self, module_id, text_list, batch_size=DEFAULT_BATCH_SIZE,
                 sleep_if_throttled=True):

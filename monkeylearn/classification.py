@@ -6,14 +6,14 @@ import six
 from six.moves import range
 
 from monkeylearn.utils import SleepRequestsMixin, MonkeyLearnResponse, HandleErrorsMixin
-from monkeylearn.settings import CLASSIFICATION_ENDPOINT, DEFAULT_BATCH_SIZE
+from monkeylearn.settings import DEFAULT_BASE_ENDPOINT, DEFAULT_BATCH_SIZE
 
 
 class Classification(SleepRequestsMixin, HandleErrorsMixin):
 
-    def __init__(self, token):
+    def __init__(self, token, base_endpoint=DEFAULT_BASE_ENDPOINT):
         self.token = token
-        self.endpoint = CLASSIFICATION_ENDPOINT
+        self.endpoint = base_endpoint + 'classifiers/'
 
     @property
     def categories(self):
