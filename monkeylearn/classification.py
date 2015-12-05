@@ -107,7 +107,7 @@ class Categories(SleepRequestsMixin, HandleErrorsMixin):
 
     def __init__(self, token):
         self.token = token
-        self.endpoint = CLASSIFICATION_ENDPOINT
+        self.endpoint = DEFAULT_BASE_ENDPOINT
 
     def create(self, module_id, name, parent_id, sleep_if_throttled=True):
         url = self.endpoint + module_id + '/categories/'
