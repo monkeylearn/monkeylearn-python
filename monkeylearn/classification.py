@@ -17,7 +17,7 @@ class Classification(SleepRequestsMixin, HandleErrorsMixin):
 
     @property
     def categories(self):
-        return Categories(self.token)
+        return Categories(self.token, self.endpoint)
 
     def classify(self, module_id, text_list, sandbox=False,
                  batch_size=DEFAULT_BATCH_SIZE, sleep_if_throttled=True):
@@ -105,9 +105,9 @@ class Classification(SleepRequestsMixin, HandleErrorsMixin):
 
 class Categories(SleepRequestsMixin, HandleErrorsMixin):
 
-    def __init__(self, token):
+    def __init__(self, token, endpoint):
         self.token = token
-        self.endpoint = CLASSIFICATION_ENDPOINT
+        self.endpoint = endpoint
 
     def create(self, module_id, name, parent_id, sleep_if_throttled=True):
         url = self.endpoint + module_id + '/categories/'
