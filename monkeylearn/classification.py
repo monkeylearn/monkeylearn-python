@@ -39,6 +39,12 @@ class Classification(SleepRequestsMixin, HandleErrorsMixin):
 
         return MonkeyLearnResponse(res, responses)
 
+    def list(self, sleep_if_throttled=True):
+        url = self.endpoint
+        response = self.make_request(url, 'GET', sleep_if_throttled=sleep_if_throttled)
+        self.handle_errors(response)
+        return MonkeyLearnResponse(response.json()['result'], [response])
+
     def detail(self, module_id, sleep_if_throttled=True):
         url = self.endpoint + module_id
         response = self.make_request(url, 'GET', sleep_if_throttled=sleep_if_throttled)
