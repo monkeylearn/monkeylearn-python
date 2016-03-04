@@ -7,6 +7,7 @@ from six.moves import range
 
 from monkeylearn.utils import SleepRequestsMixin, MonkeyLearnResponse, HandleErrorsMixin
 from monkeylearn.settings import DEFAULT_BASE_ENDPOINT, DEFAULT_BATCH_SIZE
+from monkeylearn.exceptions import MonkeyLearnException
 
 
 class Classification(SleepRequestsMixin, HandleErrorsMixin):
@@ -53,8 +54,26 @@ class Classification(SleepRequestsMixin, HandleErrorsMixin):
 
     def upload_samples(self, module_id, samples_with_categories, sleep_if_throttled=True):
         url = self.endpoint + module_id + '/samples/'
+        samples = []
+        for i, s in enumerate(samples_with_categories):
+            if (isinstance(s[1], int) or
+                    (isinstance(s[1], list) and all(isinstance(c, int) for c in s[1]))):
+                sample_dict = {"text": s[0], "category_id": s[1]}
+            elif (isinstance(s[1], basestring) or
+                    (isinstance(s[1], list) and all(isinstance(c, basestring) for c in s[1]))):
+                sample_dict = {"text": s[0], "category_path": s[1]}
+            elif s[1] is None:
+                sample_dict = {"text": s[0]}
+            else:
+                raise MonkeyLearnException('Invalid category value in sample ' + str(i))
+
+            if (len(s) > 2 and s[2] and (isinstance(s[2], basestring) or
+                    (isinstance(s[2], list) and all(isinstance(c, basestring) for c in s[2])))):
+                sample_dict['tag'] = s[2]
+
+            samples.append(sample_dict)
         data = {
-            'samples': [{"text": s[0], "category_id": s[1]} for s in samples_with_categories]
+            'samples': samples
         }
         response = self.make_request(url, 'POST', data, sleep_if_throttled)
         self.handle_errors(response)
