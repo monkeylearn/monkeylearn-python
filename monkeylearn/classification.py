@@ -2,9 +2,12 @@
 from __future__ import (
     print_function, unicode_literals, division, absolute_import)
 
-import urllib
 import six
 from six.moves import range
+try:
+    from urllib import urlencode
+except:  # For Python 3
+    from urllib.parse import urlencode
 
 from monkeylearn.utils import SleepRequestsMixin, MonkeyLearnResponse, HandleErrorsMixin
 from monkeylearn.settings import DEFAULT_BASE_ENDPOINT, DEFAULT_BATCH_SIZE
@@ -34,7 +37,7 @@ class Classification(SleepRequestsMixin, HandleErrorsMixin):
         if debug:
             url_params['debug'] = 1
         if url_params:
-            url += '?{}'.format(urllib.urlencode(url_params))
+            url += '?{}'.format(urlencode(url_params))
 
         res = []
         responses = []
