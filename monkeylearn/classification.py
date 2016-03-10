@@ -4,6 +4,10 @@ from __future__ import (
 
 import six
 from six.moves import range
+try:
+    from urllib import urlencode
+except:  # For Python 3
+    from urllib.parse import urlencode
 
 from monkeylearn.utils import SleepRequestsMixin, MonkeyLearnResponse, HandleErrorsMixin
 from monkeylearn.settings import DEFAULT_BASE_ENDPOINT, DEFAULT_BATCH_SIZE
@@ -21,12 +25,20 @@ class Classification(SleepRequestsMixin, HandleErrorsMixin):
         return Categories(self.token, self.endpoint)
 
     def classify(self, module_id, text_list, sandbox=False,
-                 batch_size=DEFAULT_BATCH_SIZE, sleep_if_throttled=True):
+                 batch_size=DEFAULT_BATCH_SIZE, sleep_if_throttled=True,
+                 debug=False):
         text_list = list(text_list)
         self.check_batch_limits(text_list, batch_size)
         url = self.endpoint + module_id + '/classify/'
+
+        url_params = {}
         if sandbox:
-            url += '?sandbox=1'
+            url_params['sandbox'] = 1
+        if debug:
+            url_params['debug'] = 1
+        if url_params:
+            url += '?{}'.format(urlencode(url_params))
+
         res = []
         responses = []
         for i in range(0, len(text_list), batch_size):
