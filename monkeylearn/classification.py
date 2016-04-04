@@ -71,16 +71,16 @@ class Classification(SleepRequestsMixin, HandleErrorsMixin):
             if (isinstance(s[1], int) or
                     (isinstance(s[1], list) and all(isinstance(c, int) for c in s[1]))):
                 sample_dict = {"text": s[0], "category_id": s[1]}
-            elif (isinstance(s[1], basestring) or
-                    (isinstance(s[1], list) and all(isinstance(c, basestring) for c in s[1]))):
+            elif (isinstance(s[1], six.string_types) or
+                    (isinstance(s[1], list) and all(isinstance(c, six.string_types) for c in s[1]))):
                 sample_dict = {"text": s[0], "category_path": s[1]}
             elif s[1] is None:
                 sample_dict = {"text": s[0]}
             else:
                 raise MonkeyLearnException('Invalid category value in sample ' + str(i))
 
-            if (len(s) > 2 and s[2] and (isinstance(s[2], basestring) or
-                    (isinstance(s[2], list) and all(isinstance(c, basestring) for c in s[2])))):
+            if (len(s) > 2 and s[2] and (isinstance(s[2], six.string_types) or
+                    (isinstance(s[2], list) and all(isinstance(c, six.string_types) for c in s[2])))):
                 sample_dict['tag'] = s[2]
 
             samples.append(sample_dict)
