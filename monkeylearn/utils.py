@@ -60,14 +60,28 @@ class HandleErrorsMixin(object):
                                        MIN_BATCH_SIZE, MAX_BATCH_SIZE))
         if not text_list:
             raise MonkeyLearnException('The text_list can\'t be empty.')
-        if '' in text_list:
-            raise MonkeyLearnException('You have an empty text in position {0} in text_list'.format(
-                                       text_list.index('')))
-        for i, text in enumerate(text_list):
-            if not isinstance(text, six.string_types):
-                raise MonkeyLearnException(
-                    'Element in position {0} in text_list must be a string.'.format(i)
-                )
+
+        # if is multi feature
+        if isinstance(text_list[0], dict):
+            if {} in text_list:
+                raise MonkeyLearnException('You have an empty sample in position {0} in sample_list'.format(
+                                           text_list.index({})))
+            for i, sample in enumerate(text_list):
+                if not isinstance(sample, dict):
+                    raise MonkeyLearnException(
+                        'Element in position {0} in sample_list must be a dict.'.format(i)
+                    )
+
+        # if is single feature
+        else:
+            if '' in text_list:
+                raise MonkeyLearnException('You have an empty text in position {0} in text_list'.format(
+                                           text_list.index('')))
+            for i, text in enumerate(text_list):
+                if not isinstance(text, six.string_types):
+                    raise MonkeyLearnException(
+                        'Element in position {0} in text_list must be a string.'.format(i)
+                    )
 
     def handle_errors(self, response):
         if not response.ok:

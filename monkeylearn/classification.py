@@ -3,6 +3,7 @@ from __future__ import (
     print_function, unicode_literals, division, absolute_import)
 
 import six
+import warnings
 from six.moves import range
 try:
     from urllib import urlencode
@@ -24,13 +25,21 @@ class Classification(SleepRequestsMixin, HandleErrorsMixin):
     def categories(self):
         return Categories(self.token, self.endpoint)
 
-    def classify(self, module_id, text_list, sandbox=False,
+    def classify(self, module_id, sample_list=None, sandbox=False,
                  batch_size=DEFAULT_BATCH_SIZE, sleep_if_throttled=True,
-                 debug=False):
-        text_list = list(text_list)
-        self.check_batch_limits(text_list, batch_size)
-        url = self.endpoint + module_id + '/classify/'
+                 debug=False, text_list=None):
 
+        if text_list:
+            warnings.warn("The text_list parameter will be deprecated in future versions. Please use sample_list.")
+            sample_list = text_list
+
+        try:
+            sample_list = list(sample_list)
+        except TypeError:
+            raise MonkeyLearnException('The sample_list can\'t be None.')
+        self.check_batch_limits(sample_list, batch_size)
+
+        url = self.endpoint + module_id + '/classify/'
         url_params = {}
         if sandbox:
             url_params['sandbox'] = 1
@@ -41,10 +50,16 @@ class Classification(SleepRequestsMixin, HandleErrorsMixin):
 
         res = []
         responses = []
-        for i in range(0, len(text_list), batch_size):
-            data = {
-                'text_list': text_list[i:i+batch_size]
-            }
+        for i in range(0, len(sample_list), batch_size):
+            # if is multi feature
+            if isinstance(sample_list[0], dict):
+                data = {
+                    'sample_list': sample_list[i:i + batch_size]
+                }
+            else:
+                data = {
+                    'text_list': sample_list[i:i + batch_size]
+                }
             response = self.make_request(url, 'POST', data, sleep_if_throttled)
             self.handle_errors(response)
             responses.append(response)
@@ -64,19 +79,26 @@ class Classification(SleepRequestsMixin, HandleErrorsMixin):
         self.handle_errors(response)
         return MonkeyLearnResponse(response.json()['result'], [response])
 
-    def upload_samples(self, module_id, samples_with_categories, sleep_if_throttled=True):
+    def upload_samples(self, module_id, samples_with_categories, sleep_if_throttled=True,
+                       features_schema=None):
         url = self.endpoint + module_id + '/samples/'
         samples = []
         for i, s in enumerate(samples_with_categories):
-            if (isinstance(s[1], int) or
-                    (isinstance(s[1], list) and all(isinstance(c, int) for c in s[1]))):
-                sample_dict = {"text": s[0], "category_id": s[1]}
-            elif (isinstance(s[1], six.string_types) or
-                    (isinstance(s[1], list) and all(isinstance(c, six.string_types) for c in s[1]))):
-                sample_dict = {"text": s[0], "category_path": s[1]}
-            elif s[1] is None:
+            # if is multi-feature
+            if isinstance(s[0], dict):
+                sample_dict = {"features": s[0]}
+            elif isinstance(s[0], six.string_types):
                 sample_dict = {"text": s[0]}
             else:
+                raise MonkeyLearnException('The sample must be a text in sample ' + str(i))
+
+            if (isinstance(s[1], int) or
+                    (isinstance(s[1], list) and all(isinstance(c, int) for c in s[1]))):
+                sample_dict["category_id"] = s[1]
+            elif (isinstance(s[1], six.string_types) or
+                    (isinstance(s[1], list) and all(isinstance(c, six.string_types) for c in s[1]))):
+                sample_dict["category_path"] = s[1]
+            elif s[1] is not None:
                 raise MonkeyLearnException('Invalid category value in sample ' + str(i))
 
             if (len(s) > 2 and s[2] and (isinstance(s[2], six.string_types) or
@@ -87,6 +109,8 @@ class Classification(SleepRequestsMixin, HandleErrorsMixin):
         data = {
             'samples': samples
         }
+        if features_schema:
+            data['features_schema'] = features_schema
         response = self.make_request(url, 'POST', data, sleep_if_throttled)
         self.handle_errors(response)
         return MonkeyLearnResponse(response.json()['result'], [response])
