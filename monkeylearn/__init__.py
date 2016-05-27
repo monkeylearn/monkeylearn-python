@@ -6,6 +6,7 @@ from monkeylearn.settings import DEFAULT_BASE_ENDPOINT
 from monkeylearn.classification import Classification
 from monkeylearn.extraction import Extraction
 from monkeylearn.pipelines import Pipelines
+from monkeylearn.clustering import Clustering
 
 class MonkeyLearn(object):
 
@@ -27,3 +28,8 @@ class MonkeyLearn(object):
     def pipelines(self):
         return Pipelines(token=self.token,
                          base_endpoint=self.base_endpoint)
+
+    @property
+    def clusters(self):
+        return Clustering(token=self.token,
+                          base_endpoint=self.base_endpoint)

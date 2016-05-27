@@ -4,12 +4,12 @@ from setuptools import setup, find_packages
 
 setup(
     name='monkeylearn',
-    version='0.3.0',
+    version='0.3.1',
     author='MonkeyLearn',
     author_email='hello@monkeylearn.com',
     description='Official Python client for the MonkeyLearn API',
     url='https://github.com/monkeylearn/monkeylearn-python',
-    download_url='https://github.com/monkeylearn/monkeylearn-python/tarball/v0.3.0',
+    download_url='https://github.com/monkeylearn/monkeylearn-python/tarball/v0.3.1',
     keywords=['monkeylearn', 'machine learning', 'python'],
     classifiers=[
         'Development Status :: 4 - Beta',
