@@ -20,6 +20,7 @@ class MonkeyLearnResponse(object):
 
 class SleepRequestsMixin(object):
     def make_request(self, url, method, data=None, sleep_if_throttled=True):
+        failure_counter = 0
         while True:
             if data:
                 response = requests.request(
@@ -41,7 +42,15 @@ class SleepRequestsMixin(object):
                     }
                 )
 
-            response_json = response.json()
+            try:
+                response_json = response.json()
+            except ValueError:  # No JSON object could be decoded
+                failure_counter += 1
+                if failure_counter > 3:
+                    raise
+                time.sleep(2 * failure_counter)
+                continue
+            failure_counter = 0
             if sleep_if_throttled and response.status_code == 429 and 'seconds' in response_json['detail']:
                 seconds = re.findall(r'available in (\d+) seconds', response_json['detail'])[0]
                 time.sleep(int(seconds))
