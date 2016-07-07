@@ -14,7 +14,7 @@ class Extraction(SleepRequestsMixin, HandleErrorsMixin):
         self.endpoint = base_endpoint + 'extractors/'
 
     def extract(self, module_id, text_list, batch_size=DEFAULT_BATCH_SIZE,
-                sleep_if_throttled=True):
+                sleep_if_throttled=True, **kwargs):
         text_list = list(text_list)
         self.check_batch_limits(text_list, batch_size)
         url = self.endpoint + module_id + '/extract/'
