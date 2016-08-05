@@ -49,12 +49,12 @@ res = ml.classifiers.train(module_id)
 res = ml.classifiers.classify(module_id, ['I love the movie', 'I hate the movie'], sandbox=True)
 print res.result
 ```
-    
+
 You can also use the sdk with extractors and pipelines:
-    
+
 ```python
 from monkeylearn import MonkeyLearn
 ml = MonkeyLearn('<YOUR API KEY HERE>')
-res = ml.extractors.extract('<Extractor ID>', ['Some text for the extractor.'], parameter_name=parameter_value)
+res = ml.extractors.extract('<Extractor ID>', ['Some text for the extractor.'], extra_parameter_name=extra_parameter_value)
 res = ml.pipelines.run('<Pipeline ID>', {'input':[{'text': 'some text for the pipeline.'}]}, sandbox=False)
 ```

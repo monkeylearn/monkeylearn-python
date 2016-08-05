@@ -22,7 +22,7 @@ class Extraction(SleepRequestsMixin, HandleErrorsMixin):
         responses = []
         for i in range(0, len(text_list), batch_size):
             data = {
-                'text_list': text_list[i:i+batch_size]
+                'text_list': text_list[i:i + batch_size]
             }
             if kwargs is not None:
                 for key, value in kwargs.iteritems():
