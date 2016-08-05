@@ -14,7 +14,7 @@ class Extraction(SleepRequestsMixin, HandleErrorsMixin):
         self.endpoint = base_endpoint + 'extractors/'
 
     def extract(self, module_id, text_list, batch_size=DEFAULT_BATCH_SIZE,
-                sleep_if_throttled=True):
+                sleep_if_throttled=True, **kwargs):
         text_list = list(text_list)
         self.check_batch_limits(text_list, batch_size)
         url = self.endpoint + module_id + '/extract/'
@@ -24,6 +24,9 @@ class Extraction(SleepRequestsMixin, HandleErrorsMixin):
             data = {
                 'text_list': text_list[i:i+batch_size]
             }
+            if kwargs is not None:
+                for key, value in kwargs.iteritems():
+                    data[key] = value
             response = self.make_request(url, 'POST', data, sleep_if_throttled)
             self.handle_errors(response)
             responses.append(response)
