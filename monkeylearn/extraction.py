@@ -25,7 +25,7 @@ class Extraction(SleepRequestsMixin, HandleErrorsMixin):
                 'text_list': text_list[i:i + batch_size]
             }
             if kwargs is not None:
-                for key, value in kwargs.iteritems():
+                for key, value in six.iteritems(kwargs):
                     data[key] = value
             response = self.make_request(url, 'POST', data, sleep_if_throttled)
             self.handle_errors(response)
