@@ -3,6 +3,7 @@ from __future__ import (
     print_function, unicode_literals, division, absolute_import)
 
 from six.moves import range
+import six
 
 from monkeylearn.utils import SleepRequestsMixin, MonkeyLearnResponse, HandleErrorsMixin
 from monkeylearn.settings import DEFAULT_BASE_ENDPOINT, DEFAULT_BATCH_SIZE
