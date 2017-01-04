@@ -21,7 +21,7 @@ class Clustering(SleepRequestsMixin, HandleErrorsMixin):
         self.endpoint = base_endpoint + 'clusters/'
 
     def predict(self, module_id, sample_list=None, sandbox=False,
-                batch_size=DEFAULT_BATCH_SIZE, sleep_if_throttled=True):
+                batch_size=DEFAULT_BATCH_SIZE, sleep_if_throttled=True, **kwargs):
         try:
             sample_list = list(sample_list)
         except TypeError:
@@ -32,6 +32,9 @@ class Clustering(SleepRequestsMixin, HandleErrorsMixin):
         url_params = {}
         if sandbox:
             url_params['sandbox'] = 1
+        if kwargs is not None:
+            for key, value in six.iteritems(kwargs):
+                url_params[key] = value
         if url_params:
             url += '?{}'.format(urlencode(url_params))
 

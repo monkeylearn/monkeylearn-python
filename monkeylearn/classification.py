@@ -27,7 +27,7 @@ class Classification(SleepRequestsMixin, HandleErrorsMixin):
 
     def classify(self, module_id, sample_list=None, sandbox=False,
                  batch_size=DEFAULT_BATCH_SIZE, sleep_if_throttled=True,
-                 debug=False, text_list=None):
+                 debug=False, text_list=None, **kwargs):
 
         if text_list:
             warnings.warn("The text_list parameter will be deprecated in future versions. Please use sample_list.")
@@ -45,6 +45,9 @@ class Classification(SleepRequestsMixin, HandleErrorsMixin):
             url_params['sandbox'] = 1
         if debug:
             url_params['debug'] = 1
+        if kwargs is not None:
+            for key, value in six.iteritems(kwargs):
+                url_params[key] = value
         if url_params:
             url += '?{}'.format(urlencode(url_params))
 
