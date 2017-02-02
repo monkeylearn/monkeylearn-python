@@ -18,6 +18,7 @@ Usage examples
 Here are some examples of how to use the library in order to create and use classifiers:
 ```python
 from monkeylearn import MonkeyLearn
+from time import sleep
 
 # Use the API key from your account
 ml = MonkeyLearn('<YOUR API KEY HERE>')
@@ -44,6 +45,9 @@ res = ml.classifiers.upload_samples(module_id, samples)
 
 # Now let's train the module!
 res = ml.classifiers.train(module_id)
+
+# Now you should wait till the module has completed training, it will take a couple of minutes
+sleep(20)
 
 # Classify some texts
 res = ml.classifiers.classify(module_id, ['I love the movie', 'I hate the movie'], sandbox=True)
