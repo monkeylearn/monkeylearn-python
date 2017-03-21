@@ -173,6 +173,12 @@ class Categories(SleepRequestsMixin, HandleErrorsMixin):
         self.token = token
         self.endpoint = endpoint
 
+    def detail(self, module_id, category_id, sleep_if_throttled=True):
+        url = self.endpoint + module_id + '/categories/' + str(category_id) + '/'
+        response = self.make_request(url, 'GET', sleep_if_throttled=sleep_if_throttled)
+        self.handle_errors(response)
+        return MonkeyLearnResponse(response.json()['result'], [response])
+
     def create(self, module_id, name, parent_id, sleep_if_throttled=True):
         url = self.endpoint + module_id + '/categories/'
         data = {
