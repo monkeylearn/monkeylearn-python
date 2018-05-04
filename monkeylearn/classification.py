@@ -93,7 +93,7 @@ class Classification(ModuleEndpointSet):
                 'production_model': production_model,
             })
             raw_response = self.make_request('POST', url, data_dict,
-                                         sleep_if_throttled=sleep_if_throttled)
+                                             sleep_if_throttled=sleep_if_throttled)
             response.add_raw_response(raw_response)
 
         return response

@@ -3,7 +3,7 @@ from __future__ import print_function, unicode_literals, division, absolute_impo
 
 import requests
 
-from monkeylearn.exceptions import MonkeyLearnException
+from monkeylearn.exceptions import MonkeyLearnResponseException, get_exception_class
 
 
 class MonkeyLearnResponse(object):
@@ -51,18 +51,23 @@ class MonkeyLearnResponse(object):
         return [result for rr in self.raw_responses for result in rr.json()]
 
     def add_raw_response(self, raw_response):
+        self.raw_responses.append(raw_response)
         if raw_response.status_code != requests.codes.ok:
             self.raise_for_status(raw_response)
-        self.raw_responses.append(raw_response)
 
     def raise_for_status(self, raw_response):
         try:
             body = raw_response.json()
         except ValueError:
-            raise MonkeyLearnException('Bad JSON from server')
+            raise MonkeyLearnResponseException(status_code=raw_response.status_code,
+                                               detail='Non-JSON response from server')
 
-        raise MonkeyLearnException(
-            detail=body['detail'],
+        exception_class = get_exception_class(status_code=raw_response.status_code,
+                                              error_code=body.get('error_code'))
+
+        raise exception_class(
+            status_code=raw_response.status_code,
+            detail=body.get('detail', 'Internal server error'),
             error_code=body.get('error_code'),
-            status_code=raw_response.status_code
+            response=self,
         )
