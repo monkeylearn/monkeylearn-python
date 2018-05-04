@@ -12,6 +12,16 @@ from monkeylearn.validation import validate_batch_size
 class Extraction(ModuleEndpointSet):
     module_type = 'extractors'
 
+    def list(self, sleep_if_throttled=True):
+        url = self.get_list_url()
+        response = self.make_request('GET', url, sleep_if_throttled=sleep_if_throttled)
+        return MonkeyLearnResponse(response)
+
+    def detail(self, module_id, sleep_if_throttled=True):
+        url = self.get_detail_url(module_id)
+        response = self.make_request('GET', url, sleep_if_throttled=sleep_if_throttled)
+        return MonkeyLearnResponse(response)
+
     def extract(self, module_id, data, production_model=None, batch_size=DEFAULT_BATCH_SIZE,
                 sleep_if_throttled=True, extra_args=None):
         if extra_args is None:
