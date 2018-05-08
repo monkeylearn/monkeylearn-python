@@ -68,6 +68,10 @@ class RateLimitError(MonkeyLearnResponseException):
     pass
 
 
+class PlanQueryLimitError(MonkeyLearnResponseException):
+    pass
+
+
 class PlanRateLimitError(RateLimitError):
     pass
 
@@ -96,8 +100,9 @@ RESPONSE_CODES_EXCEPTION_MAP = {
         '*': ResourceNotFound,
     },
     429: {
-        'REQUEST_LIMIT': PlanRateLimitError,
-        'REQUEST_CONCURRENCY_LIMIT': ConcurrencyRateLimitError,
+        'PLAN_RATE_LIMIT': PlanRateLimitError,
+        'CONCURRENCY_RATE_LIMIT': ConcurrencyRateLimitError,
+        'PLAN_QUERY_LIMIT': PlanQueryLimitError,
         '*': RateLimitError,
     },
     423: ModuleStateError,

@@ -12,8 +12,8 @@ from monkeylearn.validation import validate_batch_size
 class Extraction(ModuleEndpointSet):
     module_type = 'extractors'
 
-    def list(self, sleep_if_throttled=True):
-        url = self.get_list_url()
+    def list(self, page=1, per_page=20, sleep_if_throttled=True):
+        url = self.get_list_url(query_string={'page': page, 'per_page': per_page})
         response = self.make_request('GET', url, sleep_if_throttled=sleep_if_throttled)
         return MonkeyLearnResponse(response)
 

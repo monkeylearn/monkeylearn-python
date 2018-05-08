@@ -13,8 +13,12 @@ class MonkeyLearn(object):
 
     @property
     def classifiers(self):
-        return Classification(token=self.token, base_url=self.base_url)
+        if not hasattr(self, '_classifiers'):
+            self._classifiers = Classification(token=self.token, base_url=self.base_url)
+        return self._classifiers
 
     @property
     def extractors(self):
-        return Extraction(token=self.token, base_url=self.base_url)
+        if not hasattr(self, '_extractors'):
+            self._extractors = Extraction(token=self.token, base_url=self.base_url)
+        return self._extractors

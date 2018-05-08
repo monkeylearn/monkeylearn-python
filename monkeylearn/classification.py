@@ -14,10 +14,12 @@ class Classification(ModuleEndpointSet):
 
     @property
     def categories(self):
-        return Categories(self.token, self.base_url)
+        if not hasattr(self, '_categories'):
+            self._categories = Categories(self.token, self.base_url)
+        return self._categories
 
-    def list(self, sleep_if_throttled=True):
-        url = self.get_list_url()
+    def list(self, page=1, per_page=20, sleep_if_throttled=True):
+        url = self.get_list_url(query_string={'page': page, 'per_page': per_page})
         response = self.make_request('GET', url, sleep_if_throttled=sleep_if_throttled)
         return MonkeyLearnResponse(response)
 
@@ -81,7 +83,7 @@ class Classification(ModuleEndpointSet):
         return MonkeyLearnResponse(response)
 
     def classify(self, module_id, data, production_model=None, batch_size=DEFAULT_BATCH_SIZE,
-                 sleep_if_throttled=True):
+                 auto_batch=True, sleep_if_throttled=True):
         validate_batch_size(batch_size)
 
         url = self.get_detail_url(module_id, action='classify')

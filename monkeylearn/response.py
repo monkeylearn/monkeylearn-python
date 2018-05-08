@@ -50,6 +50,16 @@ class MonkeyLearnResponse(object):
         # Batched response, assume 2xx response bodies are lists (classify, extract)
         return [result for rr in self.raw_responses for result in rr.json()]
 
+    def failed_raw_responses(self):
+        return [r for r in self if r.status_code != requests.codes.ok]
+
+    def successful_raw_responses(self):
+        return [r for r in self if r.status_code == requests.codes.ok]
+
+    def __iter__(self):
+        for r in self.raw_responses:
+            yield r
+
     def add_raw_response(self, raw_response):
         self.raw_responses.append(raw_response)
         if raw_response.status_code != requests.codes.ok:
