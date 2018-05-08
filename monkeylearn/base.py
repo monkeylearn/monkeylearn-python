@@ -42,34 +42,31 @@ class ModuleEndpointSet(object):
         url = '{}{}/'.format(self.get_nested_list_url(parent_id, action=None), children_id)
         return self._add_action_or_query_string(url, action, query_string)
 
-    def make_request(self, method, url, data=None, sleep_if_throttled=True):
+    def make_request(self, method, url, data=None, retry_if_throttled=True):
         if data is not None:
             data = json.dumps(data)
 
-        failure_counter = 0
-        while True:
+        retries_left = 2
+        while retries_left:
             response = requests.request(method, url, data=data, headers={
                 'Authorization': 'Token ' + self.token,
                 'Content-Type': 'application/json'
             })
 
-            try:
+            if response.content != '':
                 body = response.json()
-            except ValueError:  # No JSON object could be decoded
-                failure_counter += 1
-                if failure_counter > 3:
-                    raise
-                else:
-                    continue
 
-            if sleep_if_throttled and response.status_code == 429:
-                error_code = body['error_code']
+            if retry_if_throttled and response.status_code == 429:
+                error_code = body.get('error_code')
+                wait = None
                 if error_code == 'REQUEST_LIMIT':
-                    seconds = re.findall(r'available in (\d+) seconds', body['detail'])[0]
-                    time.sleep(int(seconds))
-                    continue
+                    wait = int(re.findall(r'available in (\d+) seconds', body['detail'])[0])
                 elif error_code == 'REQUEST_CONCURRENCY_LIMIT':
-                    time.sleep(2)
+                    wait = 2
+
+                if wait:
+                    time.sleep(wait)
+                    retries_left -= 1
                     continue
 
             return response

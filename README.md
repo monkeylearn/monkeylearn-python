@@ -131,7 +131,7 @@ Available exceptions:
 
 ### Auto-batching
 
-[Classify](#classify) and [Extract](#extract) enpoints may require more than one request to the MonkeyLearn API in order to process every text in the `data` parameter. If `auto_batch` is `True` (default) you don't have to keep the `data` length below the max allowed value (200), you can just pass the full list and the library will split the list and make the necessary requests. If `sleep_if_throttled` is `True` (default) it will also wait and retry if the API throttled a request.
+[Classify](#classify) and [Extract](#extract) enpoints may require more than one request to the MonkeyLearn API in order to process every text in the `data` parameter. If `auto_batch` is `True` (default) you don't have to keep the `data` length below the max allowed value (200), you can just pass the full list and the library will split the list and make the necessary requests. If `retry_if_throttled` is `True` (default) it will also wait and retry if the API throttled a request.
 
 Let's say you send a `data` parameter with 300 texts and `auto_batch` enabled. The list will be split internally and two requests will be sent to MonkeyLearn, the first one with the first 200 texts and the second one with the last 100. If all requests respond with an 200 status code the responses will be appended and you will get the 300 classifications as usual in the `MonkeyLearnResponse.body` attribute:
 
@@ -175,7 +175,7 @@ for i in range(0, len(data['data']), batch_size):
     while retry:
         try:
             response = ml.classifiers.classify('cl_oJNMkt2V', batch_data, auto_batch=False,
-                                               sleep_if_throttled=False)
+                                               retry_if_throttled=False)
         except PlanRateLimitError:
             retry = True
             seconds = re.findall(r'available in (\d+) seconds', body['detail'])[0]
@@ -255,7 +255,7 @@ def MonkeyLearn.classifiers.create(name, description='', algorithm='nb, language
                                    max_features=10000, ngram_range=[1, 1], use_stemming=True,
                                    preprocess_numbers=True, preprocess_social_media=False,
                                    normalize_weights=True, stopwords=False, whitelist=None,
-                                   sleep_if_throttled=True)
+                                   retry_if_throttled=True)
 ```
 
 Parameters:
@@ -287,7 +287,7 @@ response = ml.classifiers.create(name='Language detection', language='multi_lang
 
 
 ```python
-def MonkeyLearn.classifiers.delete(model_id, sleep_if_throttled=True)
+def MonkeyLearn.classifiers.delete(model_id, retry_if_throttled=True)
 ```
 
 Parameters:
@@ -308,7 +308,7 @@ response = ml.classifiers.delete('cl_JkNtoMV2')
 
 
 ```python
-def MonkeyLearn.classifiers.list(page=1, per_page=20, sleep_if_throttled=True)
+def MonkeyLearn.classifiers.list(page=1, per_page=20, retry_if_throttled=True)
 ```
 
 Parameters:
@@ -330,7 +330,7 @@ response = ml.classifiers.list(page=2)
 
 
 ```python
-def MonkeyLearn.classifiers.deploy(model_id, sleep_if_throttled=True)
+def MonkeyLearn.classifiers.deploy(model_id, retry_if_throttled=True)
 ```
 
 Parameters:
@@ -351,7 +351,7 @@ response = ml.classifiers.deploy('cl_JkNtoMV2')
 
 
 ```python
-def MonkeyLearn.classifiers.categories.detail(model_id, category_id, sleep_if_throttled=True)
+def MonkeyLearn.classifiers.categories.detail(model_id, category_id, retry_if_throttled=True)
 ```
 
 Parameters:
@@ -373,7 +373,7 @@ response = ml.classifiers.categories.detail('cl_JkNtoMV2', 25)
 
 
 ```python
-def MonkeyLearn.classifiers.categories.create(model_id, name, parent_id=None, sleep_if_throttled=True)
+def MonkeyLearn.classifiers.categories.create(model_id, name, parent_id=None, retry_if_throttled=True)
 ```
 
 Parameters:
@@ -397,7 +397,7 @@ response = ml.classifiers.categories.create('cl_XXXXXXXX, 'Positive')
 
 ```python
 def MonkeyLearn.classifiers.categories.edit(model_id, category_id, name=None, parent_id=None,
-                                            sleep_if_throttled=True)
+                                            retry_if_throttled=True)
 ```
 
 Parameters:
@@ -421,7 +421,7 @@ response = ml.classifiers.categories.edit('cl_XXXXXXXX, 25, 'New name')
 
 ```python
 def MonkeyLearn.classifiers.categories.delete(model_id, category_id, move_data_to=None,
-                                              sleep_if_throttled=True)
+                                              retry_if_throttled=True)
 ```
 
 Parameters:
@@ -444,7 +444,7 @@ response = ml.classifiers.categories.delete('cl_XXXXXXXX, 25)
 
 
 ```python
-def MonkeyLearn.classifiers.upload_data(model_id, data, sleep_if_throttled=True)
+def MonkeyLearn.classifiers.upload_data(model_id, data, retry_if_throttled=True)
 ```
 
 Parameters:
@@ -482,7 +482,7 @@ response = ml.classifiers.upload_data(
 
 ```python
 def MonkeyLearn.extractors.extract(model_id, data, production_model=False, batch_size=200,
-                                   sleep_if_throttled=True, extra_args=None)
+                                   retry_if_throttled=True, extra_args=None)
 ```
 
 Parameters:
@@ -507,7 +507,7 @@ response = ml.extractors.extract('ex_NokMJtV2',
 
 
 ```python
-def MonkeyLearn.extractors.detail(model_id, sleep_if_throttled=True)
+def MonkeyLearn.extractors.detail(model_id, retry_if_throttled=True)
 ```
 
 Parameters:
@@ -529,7 +529,7 @@ response = ml.extractors.detail('ex_NokMJtV2')
 
 
 ```python
-def MonkeyLearn.extractors.list(page=1, per_page=20, sleep_if_throttled=True)
+def MonkeyLearn.extractors.list(page=1, per_page=20, retry_if_throttled=True)
 ```
 
 Parameters:
