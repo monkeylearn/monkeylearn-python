@@ -29,15 +29,15 @@ class MonkeyLearnResponse(object):
         return len(self.raw_responses)
 
     @property
-    def query_limit_limit(self):
+    def plan_queries_allowed(self):
         return int(self._get_last_request_header('X-Query-Limit-Limit'))
 
     @property
-    def query_limit_remaining(self):
+    def plan_queries_remaining(self):
         return int(self._get_last_request_header('X-Query-Limit-Remaining'))
 
     @property
-    def query_limit_request_queries(self):
+    def request_queries_used(self):
         query_count = 0
         for r in self.raw_responses:
             query_count += int(r.headers['X-Query-Limit-Request-Queries'])
