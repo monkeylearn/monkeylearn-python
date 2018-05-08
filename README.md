@@ -35,16 +35,16 @@ ml = MonkeyLearn('<YOUR API TOKEN HERE>')
 
 ### Requests
 
-From the MonkeyLearn client instance you can call any endpoint (checkout the [available endpoints](#availableendpoints) below). For example you can [classify](#classify) a text using the public [Language detection classifier](https://app.monkeylearn.com/main/classifiers/cl_oJNMkt2V/):
+From the MonkeyLearn client instance you can call any endpoint (checkout the [available endpoints](#available-endpoints) below). For example you can [classify](#classify) a list of texts (`data` parameter) using the public [Sentiment analysis classifier](https://app.monkeylearn.com/main/classifiers/cl_oJNMkt2V/):
 
 
 ```python
 response = ml.classifiers.classify(
-    model_id='cl_oJNMkt2V',
+    model_id='cl_Jx8qzYJh,
     data=[
-        'Hola amigo, como estás?',
-        {"text": 'Hello my friend, how are you?', "external_id": "T24"},
-        ""
+        'Great hotel with excellent location',
+        'This is the worst hotel ever.',
+
     ]
 )
 ```
@@ -62,7 +62,7 @@ print(response.body)
 # =>          "error": false,
 # =>          "classifications": [
 # =>              {
-# =>                  "category_name": "Spanish",
+# =>                  "category_name": "Positive",
 # =>                  "category_id": 1994,
 # =>                  "confidence": 0.922,
 # =>              }
@@ -74,32 +74,25 @@ print(response.body)
 # =>          "error": false,
 # =>          "classifications": [
 # =>              {
-# =>                  "category_name": "Programming",
+# =>                  "category_name": "Negative",
 # =>                  "category_id": 1941,
 # =>                  "confidence": 0.911,
 # =>              }
 # =>          ]
-# =>      },
-# =>      {
-# =>          "text": "",
-# =>          "external_id": null,
-# =>          "error": true,
-# =>          "error_detail": "Invalid text, empty strings are not allowed",
-# =>          "classifications": null
 # =>      }
 # =>  ]
 ```
 
-You can also access other attributes to get info about the queries consumed or available:
+You can also access other attributes in the response object to get information about the queries used or available:
 
 ```python
-print(response.query_limit_limit)
+print(response.plan_queries_allowed)
 # =>  300
 
-print(response.query_limit_remaining)
+print(response.plan_queries_remaining)
 # =>  240
 
-print(response.query_limit_request_queries)
+print(response.request_queries_used)
 # =>  2
 ```
 
@@ -116,7 +109,7 @@ except PlanQueryLimitError as e:
     # No monthly queries left
     e.response  # The MonkeyLearnResponse object
     print(e.error_code, e.detail)
-except Monkeylearn
+except MonkeyLearnException
     raise
 ```
 
@@ -138,12 +131,12 @@ Available exceptions:
 
 ### Auto-batching
 
-[Classify](#classify) and [Extract](#extract) enpoints may require more than one request to the MonkeyLearn API in order to process every text in the `data` parameter. If `auto_batch` is `True` (default) you don't have to keep the `data` length below 200, you can just pass the full list and the library will split the list and make the necessary requests. If `sleep_if_throttled` is `True` (default) it will also wait and retry if the API throttled a request.
+[Classify](#classify) and [Extract](#extract) enpoints may require more than one request to the MonkeyLearn API in order to process every text in the `data` parameter. If `auto_batch` is `True` (default) you don't have to keep the `data` length below the max allowed value (200), you can just pass the full list and the library will split the list and make the necessary requests. If `sleep_if_throttled` is `True` (default) it will also wait and retry if the API throttled a request.
 
 Let's say you send a `data` parameter with 300 texts and `auto_batch` enabled. The list will be split internally and two requests will be sent to MonkeyLearn, the first one with the first 200 texts and the second one with the last 100. If all requests respond with an 200 status code the responses will be appended and you will get the 300 classifications as usual in the `MonkeyLearnResponse.body` attribute:
 
 ``` python
-data = ['text'] * 300
+data = ['Text to classify'] * 300
 response = ml.classifiers.classify('cl_oJNMkt2V', data)
 assert len(response.body) == 300  # => True
 ```
@@ -153,22 +146,27 @@ Now let's say you only had 200 queries left when trying the previous example, th
 ``` python
 from monkeylearn.exceptions import PlanQueryLimitError
 
-data = ['text'] * 300
+data = ['Text to classify'] * 300
+batch_size = 200
 
 try:
-    response = ml.classifiers.classify('cl_oJNMkt2V', data)
+    response = ml.classifiers.classify('cl_oJNMkt2V', data, batch_size=batch_size)
 except PlanQueryLimitError as e:
     partial_response = e.response.body  # The body of the successful responses
     non_2xx_raw_responses = r.response.failed_raw_responses  # List of requests responses objects
+
+predictions = response.body
 ```
 
 
 This is very convenient and usually it's enough. If you need more flexibility you can manage batching and rate limits yourself.
 
 ``` python
-data = ['text'] * 300
+from monkeylearn.exceptions import PlanQueryLimitError, ConcurrencyRateLimitError, PlanRateLimitError
+
+data = ['Text to classify'] * 300
 batch_size = 200
-full_result = []
+predictions = []
 
 for i in range(0, len(data['data']), batch_size):
     batch_data = data[i:i + batch_size]
@@ -191,7 +189,7 @@ for i in range(0, len(data['data']), batch_size):
         else:
             retry = False
 
-    full_result.append(response.body)
+    predictions.extend(response.body)
 
 ```
 
@@ -200,16 +198,14 @@ This way you'll be able to control every request that's sent to the MonkeyLearn 
 Available endpoints
 ------------------------
 
-
 ### Classifiers
-
 
 #### Classify
 
 
 ```python
-MonkeyLearn.classifiers.classify(model_id, data, production_model=None, batch_size=200,
-                                 auto_batch=True, sleep_if_throttle=True)
+def MonkeyLearn.classifiers.classify(model_id, data, production_model=None, batch_size=200,
+                                     auto_batch=True, sleep_if_throttle=True)
 ```
 
 Parameters:
@@ -217,7 +213,7 @@ Parameters:
 | Parameter          |Type               | Description                                               |
 |--------------------|-------------------|-----------------------------------------------------------|
 |*model_id*          |`str`              |Classifier ID. Always start with *'cl'*, example *'cl_oJNMkt2V'*. |
-|*data*              |`list[str|dict]`|A list of up to 200 data elements to classify. Each element must be a *string* with the text or a *dict* with the required `text` key and the text as the value and an optional `external_id` key with a string that will be included in the response.  |
+|*data*              |`list[str or dict]`|A list of up to 200 data elements to classify. Each element must be a *string* with the text or a *dict* with the required `text` key and the text as the value and an optional `external_id` key with a string that will be included in the response.  |
 |*production_model*  |`bool`             |Indicates if the classifications are performed by the production model. Only use this parameter on *custom models*. Note that you first need to deploy the production model from the UI model settings or using the [Classifier deploy endpoint](#deploy). |
 |*batch_size*        |`int`              |Max amount of texts each request will send to MonkeyLearn. |
 |*auto_batch*         |`bool`             |Split the `data` list into smaller valid lists and send each one in separate request to MonkeyLearn and merge the responses together. |
@@ -229,12 +225,12 @@ Example:
 response = ml.classifiers.classify('cl_oJNMkt2V', data)
 ```
 
-
+<br>
 #### Classifier detail
 
 
 ```python
-MonkeyLearn.classifiers.detail(model_id)
+def MonkeyLearn.classifiers.detail(model_id)
 ```
 
 Parameters:
@@ -250,16 +246,16 @@ Example:
 response = ml.classifiers.detail('cl_oJNMkt2V')
 ```
 
-
+<br>
 #### Create Classifier
 
 
 ```python
-MonkeyLearn.classifiers.create(name, description='', algorithm='nb, language='en,
-                               max_features=10000, ngram_range=[1, 1], use_stemming=True,
-                               preprocess_numbers=True, preprocess_social_media=False,
-                               normalize_weights=True, stopwords=False, whitelist=None,
-                               sleep_if_throttled=True)
+def MonkeyLearn.classifiers.create(name, description='', algorithm='nb, language='en,
+                                   max_features=10000, ngram_range=[1, 1], use_stemming=True,
+                                   preprocess_numbers=True, preprocess_social_media=False,
+                                   normalize_weights=True, stopwords=False, whitelist=None,
+                                   sleep_if_throttled=True)
 ```
 
 Parameters:
@@ -286,12 +282,12 @@ Example:
 response = ml.classifiers.create(name='Language detection', language='multi_language')
 ```
 
-
+<br>
 #### Delete classifier
 
 
 ```python
-MonkeyLearn.classifiers.delete(model_id, sleep_if_throttled=True)
+def MonkeyLearn.classifiers.delete(model_id, sleep_if_throttled=True)
 ```
 
 Parameters:
@@ -307,12 +303,12 @@ Example:
 response = ml.classifiers.delete('cl_JkNtoMV2')
 ```
 
-
+<br>
 #### List Classifiers
 
 
 ```python
-MonkeyLearn.classifiers.list(page=1, per_page=20, sleep_if_throttled=True)
+def MonkeyLearn.classifiers.list(page=1, per_page=20, sleep_if_throttled=True)
 ```
 
 Parameters:
@@ -329,12 +325,12 @@ Example:
 response = ml.classifiers.list(page=2)
 ```
 
-
+<br>
 #### Deploy
 
 
 ```python
-MonkeyLearn.classifiers.deploy(model_id, sleep_if_throttled=True)
+def MonkeyLearn.classifiers.deploy(model_id, sleep_if_throttled=True)
 ```
 
 Parameters:
@@ -350,12 +346,12 @@ Example:
 response = ml.classifiers.deploy('cl_JkNtoMV2')
 ```
 
-
+<br>
 #### Category detail
 
 
 ```python
-MonkeyLearn.classifiers.categories.detail(model_id, category_id, sleep_if_throttled=True)
+def MonkeyLearn.classifiers.categories.detail(model_id, category_id, sleep_if_throttled=True)
 ```
 
 Parameters:
@@ -372,11 +368,12 @@ Example:
 response = ml.classifiers.categories.detail('cl_JkNtoMV2', 25)
 ```
 
+<br>
 #### Create category
 
 
 ```python
-MonkeyLearn.classifiers.categories.create(model_id, name, parent_id=None, sleep_if_throttled=True)
+def MonkeyLearn.classifiers.categories.create(model_id, name, parent_id=None, sleep_if_throttled=True)
 ```
 
 Parameters:
@@ -394,12 +391,13 @@ Example:
 response = ml.classifiers.categories.create('cl_XXXXXXXX, 'Positive')
 ```
 
+<br>
 #### Edit category
 
 
 ```python
-MonkeyLearn.classifiers.categories.edit(model_id, category_id, name=None, parent_id=None,
-                                        sleep_if_throttled=True)
+def MonkeyLearn.classifiers.categories.edit(model_id, category_id, name=None, parent_id=None,
+                                            sleep_if_throttled=True)
 ```
 
 Parameters:
@@ -417,12 +415,13 @@ Example:
 response = ml.classifiers.categories.edit('cl_XXXXXXXX, 25, 'New name')
 ```
 
+<br>
 #### Delete category
 
 
 ```python
-MonkeyLearn.classifiers.categories.delete(model_id, category_id, move_data_to=None,
-                                          sleep_if_throttled=True)
+def MonkeyLearn.classifiers.categories.delete(model_id, category_id, move_data_to=None,
+                                              sleep_if_throttled=True)
 ```
 
 Parameters:
@@ -431,7 +430,7 @@ Parameters:
 |--------------------|-------------------|-----------------------------------------------------------|
 |*model_id*          |`str`              |Classifier ID. Always start with *'cl'*, example *'cl_oJNMkt2V'*. |
 |*category_id*       |`int`              |Category ID. |
-|*move_data_to*      |`int`              |An optional category ID. If provided data of the category to be deleted will be moved to the specified category. |
+|*move_data_to*      |`int`              |An optional category ID. If provided, training data associated with the category will be moved to the specified category before deletion. |
 |*sleep_if_throttle* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits) sleep and retry the request. |
 
 Example:
@@ -440,11 +439,12 @@ Example:
 response = ml.classifiers.categories.delete('cl_XXXXXXXX, 25)
 ```
 
-#### Upload data
+<br>
+#### Upload training data
 
 
 ```python
-MonkeyLearn.classifiers.upload_data(model_id, data, sleep_if_throttled=True)
+def MonkeyLearn.classifiers.upload_data(model_id, data, sleep_if_throttled=True)
 ```
 
 Parameters:
@@ -473,7 +473,7 @@ response = ml.classifiers.upload_data(
 ```
 
 
-
+<br>
 ### Extractors
 
 
@@ -481,8 +481,8 @@ response = ml.classifiers.upload_data(
 
 
 ```python
-MonkeyLearn.extractors.extract(model_id, data, production_model=None, batch_size=200,
-                               sleep_if_throttled=True, extra_args=None)
+def MonkeyLearn.extractors.extract(model_id, data, production_model=False, batch_size=200,
+                                   sleep_if_throttled=True, extra_args=None)
 ```
 
 Parameters:
@@ -502,12 +502,12 @@ response = ml.extractors.extract('ex_NokMJtV2',
                                  data=['First text', {'text': 'Second text', 'extranal_id': '2'}])
 ```
 
-
+<br>
 #### Extractor detail
 
 
 ```python
-MonkeyLearn.extractors.detail(model_id, sleep_if_throttled=True)
+def MonkeyLearn.extractors.detail(model_id, sleep_if_throttled=True)
 ```
 
 Parameters:
@@ -524,11 +524,12 @@ response = ml.extractors.detail('ex_NokMJtV2')
 ```
 
 
+<br>
 #### Extractor list
 
 
 ```python
-MonkeyLearn.extractors.list(page=1, per_page=20, sleep_if_throttled=True)
+def MonkeyLearn.extractors.list(page=1, per_page=20, sleep_if_throttled=True)
 ```
 
 Parameters:
