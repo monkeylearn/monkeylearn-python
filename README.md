@@ -226,6 +226,7 @@ response = ml.classifiers.classify('cl_oJNMkt2V', data)
 ```
 
 <br>
+
 #### Classifier detail
 
 
@@ -247,6 +248,7 @@ response = ml.classifiers.detail('cl_oJNMkt2V')
 ```
 
 <br>
+
 #### Create Classifier
 
 
@@ -281,8 +283,8 @@ Example:
 ```python
 response = ml.classifiers.create(name='Language detection', language='multi_language')
 ```
-
 <br>
+
 #### Delete classifier
 
 
@@ -304,6 +306,7 @@ response = ml.classifiers.delete('cl_JkNtoMV2')
 ```
 
 <br>
+
 #### List Classifiers
 
 
@@ -326,6 +329,7 @@ response = ml.classifiers.list(page=2)
 ```
 
 <br>
+
 #### Deploy
 
 
@@ -347,6 +351,7 @@ response = ml.classifiers.deploy('cl_JkNtoMV2')
 ```
 
 <br>
+
 #### Category detail
 
 
@@ -369,6 +374,7 @@ response = ml.classifiers.categories.detail('cl_JkNtoMV2', 25)
 ```
 
 <br>
+
 #### Create category
 
 
@@ -392,6 +398,7 @@ response = ml.classifiers.categories.create('cl_XXXXXXXX, 'Positive')
 ```
 
 <br>
+
 #### Edit category
 
 
@@ -416,6 +423,7 @@ response = ml.classifiers.categories.edit('cl_XXXXXXXX, 25, 'New name')
 ```
 
 <br>
+
 #### Delete category
 
 
@@ -440,6 +448,7 @@ response = ml.classifiers.categories.delete('cl_XXXXXXXX, 25)
 ```
 
 <br>
+
 #### Upload training data
 
 
@@ -472,8 +481,8 @@ response = ml.classifiers.upload_data(
 )
 ```
 
-
 <br>
+
 ### Extractors
 
 
@@ -503,6 +512,7 @@ response = ml.extractors.extract('ex_NokMJtV2',
 ```
 
 <br>
+
 #### Extractor detail
 
 
@@ -523,8 +533,8 @@ Example:
 response = ml.extractors.detail('ex_NokMJtV2')
 ```
 
-
 <br>
+
 #### Extractor list
 
 
