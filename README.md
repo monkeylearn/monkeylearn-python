@@ -24,7 +24,7 @@ Usage
 ------
 
 
-Before calling making requests to the API you need to create an instance of the MonkeyLearn client, using your account API Key:
+Before making requests to the API you need to create an instance of the MonkeyLearn client, using your account API Key:
 
 ```python
 from monkeylearn import MonkeyLearn
@@ -35,7 +35,7 @@ ml = MonkeyLearn('<YOUR API TOKEN HERE>')
 
 ### Requests
 
-From the MonkeyLearn client instance you can call any endpoint (checkout the [available endpoints](#available-endpoints) below). For example you can [classify](#classify) a list of texts (`data` parameter) using the public [Sentiment analysis classifier](https://app.monkeylearn.com/main/classifiers/cl_oJNMkt2V/):
+From the MonkeyLearn client instance you can call any endpoint (check out the [available endpoints](#available-endpoints) below). For example you can [classify](#classify) a list of texts (`data` parameter) using the public [Sentiment analysis classifier](https://app.monkeylearn.com/main/classifiers/cl_oJNMkt2V/):
 
 
 ```python
@@ -43,40 +43,39 @@ response = ml.classifiers.classify(
     model_id='cl_Jx8qzYJh,
     data=[
         'Great hotel with excellent location',
-        'This is the worst hotel ever.',
-
+        'This is the worst hotel ever.'
     ]
 )
 ```
 
 ### Responses
 
-The response object returned by every endpoint call it's a `MonkeyLearnResponse` object. The `body` attribute has the parsed response from the API:
+The response object returned by every endpoint call is a `MonkeyLearnResponse` object. The `body` attribute has the parsed response from the API:
 
 ```python
 print(response.body)
 # =>  [
 # =>      {
-# =>          "text": "Hola amigo, como estás?",
-# =>          "external_id": null,
-# =>          "error": false,
-# =>          "classifications": [
+# =>          'text': 'Hola amigo, como estás?',
+# =>          'external_id': null,
+# =>          'error': false,
+# =>          'classifications': [
 # =>              {
-# =>                  "category_name": "Positive",
-# =>                  "category_id": 1994,
-# =>                  "confidence": 0.922,
+# =>                  'category_name': 'Positive',
+# =>                  'category_id': 1994,
+# =>                  'confidence': 0.922,
 # =>              }
 # =>          ]
 # =>      },
 # =>      {
-# =>          "text": "Hello my friend, how are you?",
-# =>          "external_id": null,
-# =>          "error": false,
-# =>          "classifications": [
+# =>          'text': 'Hello my friend, how are you?',
+# =>          'external_id': null,
+# =>          'error': false,
+# =>          'classifications': [
 # =>              {
-# =>                  "category_name": "Negative",
-# =>                  "category_id": 1941,
-# =>                  "confidence": 0.911,
+# =>                  'category_name': 'Negative',
+# =>                  'category_id': 1941,
+# =>                  'confidence': 0.911,
 # =>              }
 # =>          ]
 # =>      }
@@ -98,7 +97,7 @@ print(response.request_queries_used)
 
 ### Errors
 
-Endpoint calls, may raise exceptions. Here's an example on how to handle them:
+Endpoint calls may raise exceptions. Here is an example on how to handle them:
 
 ```python
 from monkeylearn.exceptions import PlanQueryLimitError, MonkeyLearnException
@@ -107,7 +106,7 @@ try:
     response = ml.classifiers.classify('cl_XXXXXXXX', data=['My text'])
 except PlanQueryLimitError as e:
     # No monthly queries left
-    e.response  # The MonkeyLearnResponse object
+    # e.response contains the MonkeyLearnResponse object
     print(e.error_code, e.detail)
 except MonkeyLearnException
     raise
@@ -117,14 +116,14 @@ Available exceptions:
 
 | class                       | Description |
 |-----------------------------|-------------|
-| `MonkeyLearnException`      | Base class for every exception below                                  |
+| `MonkeyLearnException`      | Base class for every exception below.                                  |
 | `RequestParamsError`        | An invalid parameter was send. Checkout the exception message or response object for more information. |
-| `AuthenticationError`       | Authentication failed, usually an invalid token was provided, check the exception message. More about [Authentication](https://monkeylearn.com/api/v3/#authentication). |
+| `AuthenticationError`       | Authentication failed, usually because an invalid token was provided. For more information, check the exception message. More about [Authentication](https://monkeylearn.com/api/v3/#authentication). |
 | `ForbiddenError`            | You don't have permissions to perform the action on the given resource. |
 | `ModelLimitError`           | You have reached the custom model limit for your plan. |
-| `ModelNotFound`             | The model does not exist, check the `model_id` |
+| `ModelNotFound`             | The model does not exist, check the `model_id`. |
 | `CategoryNotFound`          | The classifier category does not exist, check the `category_id` parameter. |
-| `PlanQueryLimitError`           | You have reached the monthly query limit for your plan. Consider upgrading your plan. More about [Plan query limits](https://monkeylearn.com/api/v3/#query-limits) |
+| `PlanQueryLimitError`           | You have reached the monthly query limit for your plan. Consider upgrading your plan. More about [Plan query limits](https://monkeylearn.com/api/v3/#query-limits). |
 | `PlanRateLimitError`        | You have sent too many requests in the last minute. Checkout the exception detail. More about [Plan rate limit](https://monkeylearn.com/api/v3/#plan-rate-limit). |
 | `ConcurrencyRateLimitError` | You have sent too many requests in the last second. Checkout the exception detail. More about [Concurrency rate limit](https://monkeylearn.com/api/v3/#concurrecy-rate-limit). |
 
@@ -141,7 +140,7 @@ response = ml.classifiers.classify('cl_oJNMkt2V', data)
 assert len(response.body) == 300  # => True
 ```
 
-Now let's say you only had 200 queries left when trying the previous example, the second internal request will fail since you don't have queries left after the first batch and a `PlanQueryLimitError` exception will be raised. If you don't manage this exception with an `except` clause the first 200 classifications that did worked are lost. Here's how you should handle that case:
+Now let's say you only had 200 queries left when trying the previous example, the second internal request will fail since you don't have queries left after the first batch and a `PlanQueryLimitError` exception will be raised. The first 200 (successful) classifications will be in the exception object. However, if you don't manage this exception with an `except` clause, those first 200 classifications that did work will be lost. Here's how you should handle that case:
 
 ``` python
 from monkeylearn.exceptions import PlanQueryLimitError
@@ -152,14 +151,13 @@ batch_size = 200
 try:
     response = ml.classifiers.classify('cl_oJNMkt2V', data, batch_size=batch_size)
 except PlanQueryLimitError as e:
-    partial_response = e.response.body  # The body of the successful responses
+    partial_predictions = e.response.body  # The body of the successful responses
     non_2xx_raw_responses = r.response.failed_raw_responses  # List of requests responses objects
-
-predictions = response.body
+else:
+    predictions = response.body
 ```
 
-
-This is very convenient and usually it's enough. If you need more flexibility you can manage batching and rate limits yourself.
+This is very convenient and usually should be enough. If you need more flexibility, you can manage batching and rate limits yourself.
 
 ``` python
 from monkeylearn.exceptions import PlanQueryLimitError, ConcurrencyRateLimitError, PlanRateLimitError
@@ -198,6 +196,8 @@ This way you'll be able to control every request that's sent to the MonkeyLearn 
 Available endpoints
 ------------------------
 
+These are all the endpoints of the API. For more information about each endpoint, check out the [API documentation](https://monkeylearn.com/api/v3/).
+
 ### Classifiers
 
 #### Classify
@@ -212,16 +212,17 @@ Parameters:
 
 | Parameter          |Type               | Description                                               |
 |--------------------|-------------------|-----------------------------------------------------------|
-|*model_id*          |`str`              |Classifier ID. Always start with *'cl'*, example *'cl_oJNMkt2V'*. |
+|*model_id*          |`str`              |Classifier ID. Always starts with `'cl'`, for example `'cl_oJNMkt2V'`. |
 |*data*              |`list[str or dict]`|A list of up to 200 data elements to classify. Each element must be a *string* with the text or a *dict* with the required `text` key and the text as the value and an optional `external_id` key with a string that will be included in the response.  |
 |*production_model*  |`bool`             |Indicates if the classifications are performed by the production model. Only use this parameter on *custom models*. Note that you first need to deploy the production model from the UI model settings or using the [Classifier deploy endpoint](#deploy). |
 |*batch_size*        |`int`              |Max amount of texts each request will send to MonkeyLearn. |
-|*auto_batch*         |`bool`             |Split the `data` list into smaller valid lists and send each one in separate request to MonkeyLearn and merge the responses together. |
-|*sleep_if_throttle* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits) sleep and retry the request. |
+|*auto_batch*         |`bool`             |Split the `data` list into smaller valid lists, send each one in separate request to MonkeyLearn, and merge the responses together. |
+|*sleep_if_throttle* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
 
 Example:
 
 ```python
+data = ['First text', {'text': 'Second text', 'external_id': '2'}]
 response = ml.classifiers.classify('cl_oJNMkt2V', data)
 ```
 
@@ -238,8 +239,8 @@ Parameters:
 
 | Parameter          |Type               | Description                                               |
 |--------------------|-------------------|-----------------------------------------------------------|
-|*model_id*          |`str`              |Classifier ID. Always start with *'cl'*, example *'cl_oJNMkt2V'*. |
-|*sleep_if_throttle* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits) sleep and retry the request. |
+|*model_id*          |`str`              |Classifier ID. Always starts with `'cl'`, for example `'cl_oJNMkt2V'`. |
+|*sleep_if_throttle* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
 
 Example:
 
@@ -276,7 +277,7 @@ preprocess_social_media | `bool` | Indicates whether [preprocessing for social m
 normalize_weights | `bool` | Indicates whether [weights will be normalized](http://help.monkeylearn.com/tips-and-tricks-for-custom-modules/parameters-normalize-weights) when training the model.
 stopwords | `bool or list` |  The list of [stopwords](http://help.monkeylearn.com/tips-and-tricks-for-custom-modules/parameters-filter-stopwords) used when training the model. Use false for no stopwords, true for the default stopwords, or an array of strings for custom stopwords.
 whitelist | `list` | The [whitelist](http://help.monkeylearn.com/tips-and-tricks-for-custom-modules/parameters-whitelist) of words used when training the model.
-|*sleep_if_throttle* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits) sleep and retry the request. |
+|*sleep_if_throttle* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
 
 Example:
 
@@ -296,8 +297,8 @@ Parameters:
 
 | Parameter          |Type               | Description                                               |
 |--------------------|-------------------|-----------------------------------------------------------|
-|*model_id*          |`str`              |Classifier ID. Always start with *'cl'*, example *'cl_oJNMkt2V'*. |
-|*sleep_if_throttle* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits) sleep and retry the request. |
+|*model_id*          |`str`              |Classifier ID. Always starts with `'cl'`, for example `'cl_oJNMkt2V'`. |
+|*sleep_if_throttle* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
 
 Example:
 
@@ -320,7 +321,7 @@ Parameters:
 |--------------------|-------------------|-------------|
 |*page*              |`int`              |Specifies which page to get.|
 |*per_page*          |`int`              |Specifies how many items to return per page. |
-|*sleep_if_throttle* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits) sleep and retry the request. |
+|*sleep_if_throttle* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
 
 Example:
 
@@ -341,8 +342,8 @@ Parameters:
 
 | Parameter          |Type               | Description                                               |
 |--------------------|-------------------|-----------------------------------------------------------|
-|*model_id*          |`str`              |Classifier ID. Always start with *'cl'*, example *'cl_oJNMkt2V'*. |
-|*sleep_if_throttle* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits) sleep and retry the request. |
+|*model_id*          |`str`              |Classifier ID. Always starts with `'cl'`, for example `'cl_oJNMkt2V'`. |
+|*sleep_if_throttle* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
 
 Example:
 
@@ -363,9 +364,9 @@ Parameters:
 
 | Parameter          |Type               | Description                                               |
 |--------------------|-------------------|-----------------------------------------------------------|
-|*model_id*          |`str`              |Classifier ID. Always start with *'cl'*, example *'cl_oJNMkt2V'*. |
+|*model_id*          |`str`              |Classifier ID. Always starts with `'cl'`, for example `'cl_oJNMkt2V'`. |
 |*category_id*       |`int`              |Category ID. |
-|*sleep_if_throttle* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits) sleep and retry the request. |
+|*sleep_if_throttle* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
 
 Example:
 
@@ -386,10 +387,10 @@ Parameters:
 
 | Parameter          |Type               | Description                                               |
 |--------------------|-------------------|-----------------------------------------------------------|
-|*model_id*          |`str`              |Classifier ID. Always start with *'cl'*, example *'cl_oJNMkt2V'*. |
+|*model_id*          |`str`              |Classifier ID. Always starts with `'cl'`, for example `'cl_oJNMkt2V'`. |
 |*name*              |`str`              |The name of the new category. |
 |*parent_id*         |`int`              |**DEPRECATED**. The ID of the parent category. |
-|*sleep_if_throttle* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits) sleep and retry the request. |
+|*sleep_if_throttle* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
 
 Example:
 
@@ -411,10 +412,10 @@ Parameters:
 
 | Parameter          |Type               | Description                                               |
 |--------------------|-------------------|-----------------------------------------------------------|
-|*model_id*          |`str`              |Classifier ID. Always start with *'cl'*, example *'cl_oJNMkt2V'*. |
+|*model_id*          |`str`              |Classifier ID. Always starts with `'cl'`, for example `'cl_oJNMkt2V'`. |
 |*category_id*       |`int`              |Category ID. |
 |*name*              |`str`              |The new name of the category. |
-|*sleep_if_throttle* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits) sleep and retry the request. |
+|*sleep_if_throttle* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
 
 Example:
 
@@ -436,10 +437,10 @@ Parameters:
 
 | Parameter          |Type               | Description                                               |
 |--------------------|-------------------|-----------------------------------------------------------|
-|*model_id*          |`str`              |Classifier ID. Always start with *'cl'*, example *'cl_oJNMkt2V'*. |
+|*model_id*          |`str`              |Classifier ID. Always starts with `'cl'`, for example `'cl_oJNMkt2V'`. |
 |*category_id*       |`int`              |Category ID. |
 |*move_data_to*      |`int`              |An optional category ID. If provided, training data associated with the category will be moved to the specified category before deletion. |
-|*sleep_if_throttle* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits) sleep and retry the request. |
+|*sleep_if_throttle* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
 
 Example:
 
@@ -460,9 +461,9 @@ Parameters:
 
 | Parameter          |Type               | Description                                               |
 |--------------------|-------------------|-----------------------------------------------------------|
-|*model_id*          |`str`              |Classifier ID. Always start with *'cl'*, example *'cl_oJNMkt2V'*. |
-|*data*              |`list[dict]        |A list of dicts with the keys described below.
-|*sleep_if_throttle* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits) sleep and retry the request. |
+|*model_id*          |`str`              |Classifier ID. Always starts with `'cl'`, for example `'cl_oJNMkt2V'`. |
+|*data*              |`list[dict]`        |A list of dicts with the keys described below.
+|*sleep_if_throttle* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
 
 `data` dict keys:
 
@@ -498,17 +499,17 @@ Parameters:
 
 | Parameter          |Type               | Description                                               |
 |--------------------|-------------------|-----------------------------------------------------------|
-|*model_id*          |`str`              |Extractor ID. Always start with *'ex_'*, example *'ex_oJNMkt2V'*. |
+|*model_id*          |`str`              |Extractor ID. Always starts with `'ex'`, for example `'ex_oJNMkt2V'`. |
 |*data*              |`list[str or dict]`|A list of up to 200 data elements to extract. Each element must be a *string* with the text or a *dict* with the required `text` key and the text as the value and an optional `external_id` key with a string that will be included in the response.  |
 |*production_model*  |`bool`             |Indicates if the extractions are performed by the production model. Only use this parameter on *custom models*. Note that you first need to deploy the production model from the UI model settings. |
 |*batch_size*        |`int`              |Max amount of texts each request will send to MonkeyLearn. |
-|*sleep_if_throttle* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits) sleep and retry the request. |
+|*sleep_if_throttle* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
 
 Example:
 
 ```python
-response = ml.extractors.extract('ex_NokMJtV2',
-                                 data=['First text', {'text': 'Second text', 'extranal_id': '2'}])
+data = ['First text', {'text': 'Second text', 'external_id': '2'}]
+response = ml.extractors.extract('ex_NokMJtV2', data=data)
 ```
 
 <br>
@@ -524,8 +525,8 @@ Parameters:
 
 | Parameter          |Type               | Description                                               |
 |--------------------|-------------------|-----------------------------------------------------------|
-|*model_id*          |`str`              |Extractor ID. Always start with *'ex_'*, example *'ex_oJNMkt2V'*. |
-|*sleep_if_throttle* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits) sleep and retry the request. |
+|*model_id*          |`str`              |Extractor ID. Always starts with `'ex'`, for example `'ex_oJNMkt2V'`. |
+|*sleep_if_throttle* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
 
 Example:
 
@@ -548,7 +549,7 @@ Parameters:
 |--------------------|-------------------|-------------|
 |*page*              |`int`              |Specifies which page to get.|
 |*per_page*          |`int`              |Specifies how many items to return per page. |
-|*sleep_if_throttle* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits) sleep and retry the request. |
+|*sleep_if_throttle* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
 
 Example:
 
