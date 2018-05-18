@@ -54,14 +54,16 @@ class ModelEndpointSet(object):
             })
 
             if response.content != '':
+                print(response.content)
                 body = response.json()
 
             if retry_if_throttled and response.status_code == 429:
                 error_code = body.get('error_code')
+
                 wait = None
-                if error_code == 'REQUEST_LIMIT':
+                if error_code == 'PLAN_RATE_LIMIT':
                     wait = int(re.findall(r'available in (\d+) seconds', body['detail'])[0])
-                elif error_code == 'REQUEST_CONCURRENCY_LIMIT':
+                elif error_code == 'CONCURRENCY_RATE_LIMIT':
                     wait = 2
 
                 if wait:

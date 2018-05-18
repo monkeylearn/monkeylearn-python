@@ -13,10 +13,10 @@ class Classification(ModelEndpointSet):
     model_type = 'classifiers'
 
     @property
-    def categories(self):
-        if not hasattr(self, '_categories'):
-            self._categories = Categories(self.token, self.base_url)
-        return self._categories
+    def tags(self):
+        if not hasattr(self, '_tags'):
+            self._tags = Tags(self.token, self.base_url)
+        return self._tags
 
     def list(self, page=1, per_page=20, retry_if_throttled=True):
         url = self.get_list_url(query_string={'page': page, 'per_page': per_page})
@@ -107,11 +107,11 @@ class Classification(ModelEndpointSet):
         return MonkeyLearnResponse(response)
 
 
-class Categories(ModelEndpointSet):
-    model_type = ('classifiers', 'categories')
+class Tags(ModelEndpointSet):
+    model_type = ('classifiers', 'tags')
 
-    def detail(self, model_id, category_id, retry_if_throttled=True):
-        url = self.get_nested_detail_url(model_id, category_id)
+    def detail(self, model_id, tag_id, retry_if_throttled=True):
+        url = self.get_nested_detail_url(model_id, tag_id)
         response = self.make_request('GET', url, retry_if_throttled=retry_if_throttled)
         return MonkeyLearnResponse(response)
 
@@ -124,19 +124,19 @@ class Categories(ModelEndpointSet):
         response = self.make_request('POST', url, data, retry_if_throttled=retry_if_throttled)
         return MonkeyLearnResponse(response)
 
-    def edit(self, model_id, category_id, name=None, parent_id=None, retry_if_throttled=True):
+    def edit(self, model_id, tag_id, name=None, parent_id=None, retry_if_throttled=True):
         data = self.remove_none_value({
             'name': name,
             'parent_id': parent_id
         })
-        url = self.get_nested_detail_url(model_id, category_id)
+        url = self.get_nested_detail_url(model_id, tag_id)
         response = self.make_request('PATCH', url, data, retry_if_throttled=retry_if_throttled)
         return MonkeyLearnResponse(response)
 
-    def delete(self, model_id, category_id, move_data_to=None, retry_if_throttled=True):
+    def delete(self, model_id, tag_id, move_data_to=None, retry_if_throttled=True):
         data = self.remove_none_value({
             'move_data_to': move_data_to,
         })
-        url = self.get_nested_detail_url(model_id, category_id)
+        url = self.get_nested_detail_url(model_id, tag_id)
         response = self.make_request('DELETE', url, data, retry_if_throttled=retry_if_throttled)
         return MonkeyLearnResponse(response)
