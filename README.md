@@ -62,8 +62,8 @@ print(response.body)
 # =>          'error': false,
 # =>          'classifications': [
 # =>              {
-# =>                  'category_name': 'Positive',
-# =>                  'category_id': 1994,
+# =>                  'tag_name': 'Positive',
+# =>                  'tag_id': 1994,
 # =>                  'confidence': 0.922,
 # =>              }
 # =>          ]
@@ -74,8 +74,8 @@ print(response.body)
 # =>          'error': false,
 # =>          'classifications': [
 # =>              {
-# =>                  'category_name': 'Negative',
-# =>                  'category_id': 1941,
+# =>                  'tag_name': 'Negative',
+# =>                  'tag_id': 1941,
 # =>                  'confidence': 0.911,
 # =>              }
 # =>          ]
@@ -354,11 +354,11 @@ response = ml.classifiers.deploy('[MODEL_ID]')
 
 <br>
 
-#### Category detail
+#### Tag detail
 
 
 ```python
-def MonkeyLearn.classifiers.categories.detail(model_id, category_id, retry_if_throttled=True)
+def MonkeyLearn.classifiers.tags.detail(model_id, tag_id, retry_if_throttled=True)
 ```
 
 Parameters:
@@ -366,22 +366,22 @@ Parameters:
 | Parameter          |Type               | Description                                               |
 |--------------------|-------------------|-----------------------------------------------------------|
 |*model_id*          |`str`              |Classifier ID. Always starts with `'cl'`, for example `'cl_oJNMkt2V'`. |
-|*category_id*       |`int`              |Category ID. |
+|*tag_id*       |`int`              |Tag ID. |
 |*sleep_if_throttle* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
 
 Example:
 
 ``` python
-response = ml.classifiers.categories.detail('[MODEL_ID]', 25)
+response = ml.classifiers.tags.detail('[MODEL_ID]', 25)
 ```
 
 <br>
 
-#### Create category
+#### Create tag
 
 
 ```python
-def MonkeyLearn.classifiers.categories.create(model_id, name, parent_id=None, retry_if_throttled=True)
+def MonkeyLearn.classifiers.tags.create(model_id, name, parent_id=None, retry_if_throttled=True)
 ```
 
 Parameters:
@@ -389,23 +389,23 @@ Parameters:
 | Parameter          |Type               | Description                                               |
 |--------------------|-------------------|-----------------------------------------------------------|
 |*model_id*          |`str`              |Classifier ID. Always starts with `'cl'`, for example `'cl_oJNMkt2V'`. |
-|*name*              |`str`              |The name of the new category. |
-|*parent_id*         |`int`              |**DEPRECATED**. The ID of the parent category. |
+|*name*              |`str`              |The name of the new tag. |
+|*parent_id*         |`int`              |**DEPRECATED**. The ID of the parent tag. |
 |*sleep_if_throttle* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
 
 Example:
 
 ```python
-response = ml.classifiers.categories.create('[MODEL_ID]', 'Positive')
+response = ml.classifiers.tags.create('[MODEL_ID]', 'Positive')
 ```
 
 <br>
 
-#### Edit category
+#### Edit tag
 
 
 ```python
-def MonkeyLearn.classifiers.categories.edit(model_id, category_id, name=None, parent_id=None,
+def MonkeyLearn.classifiers.tags.edit(model_id, tag_id, name=None, parent_id=None,
                                             retry_if_throttled=True)
 ```
 
@@ -414,23 +414,23 @@ Parameters:
 | Parameter          |Type               | Description                                               |
 |--------------------|-------------------|-----------------------------------------------------------|
 |*model_id*          |`str`              |Classifier ID. Always starts with `'cl'`, for example `'cl_oJNMkt2V'`. |
-|*category_id*       |`int`              |Category ID. |
-|*name*              |`str`              |The new name of the category. |
+|*tag_id*       |`int`              |Tag ID. |
+|*name*              |`str`              |The new name of the tag. |
 |*sleep_if_throttle* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
 
 Example:
 
 ```python
-response = ml.classifiers.categories.edit('[MODEL_ID]', 25, 'New name')
+response = ml.classifiers.tags.edit('[MODEL_ID]', 25, 'New name')
 ```
 
 <br>
 
-#### Delete category
+#### Delete tag
 
 
 ```python
-def MonkeyLearn.classifiers.categories.delete(model_id, category_id, move_data_to=None,
+def MonkeyLearn.classifiers.tags.delete(model_id, tag_id, move_data_to=None,
                                               retry_if_throttled=True)
 ```
 
@@ -439,14 +439,14 @@ Parameters:
 | Parameter          |Type               | Description                                               |
 |--------------------|-------------------|-----------------------------------------------------------|
 |*model_id*          |`str`              |Classifier ID. Always starts with `'cl'`, for example `'cl_oJNMkt2V'`. |
-|*category_id*       |`int`              |Category ID. |
-|*move_data_to*      |`int`              |An optional category ID. If provided, training data associated with the category will be moved to the specified category before deletion. |
+|*tag_id*       |`int`              |Tag ID. |
+|*move_data_to*      |`int`              |An optional tag ID. If provided, training data associated with the tag will be moved to the specified tag before deletion. |
 |*sleep_if_throttle* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
 
 Example:
 
 ```python
-response = ml.classifiers.categories.delete('[MODEL_ID]', 25)
+response = ml.classifiers.tags.delete('[MODEL_ID]', 25)
 ```
 
 <br>
@@ -471,7 +471,7 @@ Parameters:
 |Key             | Description |
 |---------       | ----------- |
 |text | A *string* of the text to upload.|
-|categories | An optional *list* of category ID integers. The text will be tagged with each of these categories.|
+|tags | An optional *list* of tag ID integers. The text will be tagged with each of these tags.|
 |marks | An optional *list* of *string*. Each one represents a mark that will be associated with the text. Marks will be created if needed.|
 
 Example:
@@ -479,7 +479,7 @@ Example:
 ```python
 response = ml.classifiers.upload_data(
     model_id='[MODEL_ID]',
-    data=[{'text': 'text 1', 'categories': [15, 20]}]
+    data=[{'text': 'text 1', tags': [15, 20]}]
 )
 ```
 
