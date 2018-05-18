@@ -89,9 +89,9 @@ class Classification(ModelEndpointSet):
         url = self.get_detail_url(model_id, action='classify')
 
         response = MonkeyLearnResponse()
-        for i in range(0, len(data['data']), batch_size):
+        for i in range(0, len(data), batch_size):
             data_dict = self.remove_none_value({
-                'data': data['data'][i:i + batch_size],
+                'data': data[i:i + batch_size],
                 'production_model': production_model,
             })
             raw_response = self.make_request('POST', url, data_dict,
