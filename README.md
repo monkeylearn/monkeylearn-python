@@ -201,7 +201,7 @@ These are all the endpoints of the API. For more information about each endpoint
 
 ### Classifiers
 
-#### Classify
+#### [Classify](https://monkeylearn.com/api/v3/?shell#classify)
 
 
 ```python
@@ -229,7 +229,7 @@ response = ml.classifiers.classify('[MODEL_ID]', data)
 
 <br>
 
-#### Classifier detail
+#### [Classifier detail](https://monkeylearn.com/api/v3/?shell#classifier-detail)
 
 
 ```python
@@ -251,7 +251,7 @@ response = ml.classifiers.detail('[MODEL_ID]')
 
 <br>
 
-#### Create Classifier
+#### [Create Classifier](https://monkeylearn.com/api/v3/?shell#create-classifier)
 
 
 ```python
@@ -309,7 +309,7 @@ response = ml.classifiers.delete('[MODEL_ID]')
 
 <br>
 
-#### List Classifiers
+#### [List Classifiers](https://monkeylearn.com/api/v3/?shell#list-classifiers)
 
 
 ```python
@@ -332,7 +332,7 @@ response = ml.classifiers.list(page=2)
 
 <br>
 
-#### Deploy
+#### [Deploy](https://monkeylearn.com/api/v3/?shell#deploy)
 
 
 ```python
@@ -354,7 +354,7 @@ response = ml.classifiers.deploy('[MODEL_ID]')
 
 <br>
 
-#### Tag detail
+#### [Tag detail](https://monkeylearn.com/api/v3/?shell#classify)
 
 
 ```python
@@ -377,7 +377,7 @@ response = ml.classifiers.tags.detail('[MODEL_ID]', 25)
 
 <br>
 
-#### Create tag
+#### [Create tag](https://monkeylearn.com/api/v3/?shell#create-tag)
 
 
 ```python
@@ -401,7 +401,7 @@ response = ml.classifiers.tags.create('[MODEL_ID]', 'Positive')
 
 <br>
 
-#### Edit tag
+#### [Edit tag](https://monkeylearn.com/api/v3/?shell#edit-tag)
 
 
 ```python
@@ -426,7 +426,7 @@ response = ml.classifiers.tags.edit('[MODEL_ID]', 25, 'New name')
 
 <br>
 
-#### Delete tag
+#### [Delete tag](https://monkeylearn.com/api/v3/?shell#delete-tag)
 
 
 ```python
@@ -451,7 +451,7 @@ response = ml.classifiers.tags.delete('[MODEL_ID]', 25)
 
 <br>
 
-#### Upload training data
+#### [Upload training data](https://monkeylearn.com/api/v3/?shell#upload-data)
 
 
 ```python
@@ -488,7 +488,7 @@ response = ml.classifiers.upload_data(
 ### Extractors
 
 
-#### Extract
+#### [Extract](https://monkeylearn.com/api/v3/?shell#extract)
 
 
 ```python
@@ -515,7 +515,7 @@ response = ml.extractors.extract('[MODEL_ID]', data=data)
 
 <br>
 
-#### Extractor detail
+#### [Extractor detail](https://monkeylearn.com/api/v3/?shell#extractor-detail)
 
 
 ```python
@@ -537,7 +537,7 @@ response = ml.extractors.detail('[MODEL_ID]')
 
 <br>
 
-#### Extractor list
+#### [Extractor list](https://monkeylearn.com/api/v3/?shell#list-extractors)
 
 
 ```python
