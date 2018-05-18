@@ -46,9 +46,12 @@ class MonkeyLearnResponse(object):
     @property
     def body(self):
         if self.request_count == 1:
-            return self.raw_responses[0].json()
+            if self.raw_responses[0].content:
+                return self.raw_responses[0].json()
+            else:
+                return ''
         # Batched response, assume 2xx response bodies are lists (classify, extract)
-        return [result for rr in self.raw_responses for result in rr.json()]
+        return [result for rr in self.raw_responses for result in rr.json() if rr.content]
 
     def failed_raw_responses(self):
         return [r for r in self if r.status_code != requests.codes.ok]
