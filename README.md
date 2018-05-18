@@ -287,7 +287,44 @@ response = ml.classifiers.create(name='New classifier', stopwords=True)
 ```
 <br>
 
-#### Delete classifier
+#### [Edit Classifier](https://monkeylearn.com/api/v3/?shell#edit-classifier)
+
+
+```python
+def MonkeyLearn.classifiers.edit(model_id, name=None, description=None, algorithm=None,
+                                 language=None, max_features=None, ngram_range=None,
+                                 use_stemming=None, preprocess_numbers=None,
+                                 preprocess_social_media=None, normalize_weights=None,
+                                 stopwords=None, whitelist=None, retry_if_throttled=None)
+```
+
+Parameters:
+
+Parameter | Type | Description
+--------- | ------- | -----------
+|*model_id*          |`str`              |Classifier ID. Always starts with `'cl'`, for example `'cl_oJNMkt2V'`. |
+*name* | `str` | The name of the model.
+*description* | `str` | The description of the model.
+*algorithm* | `str` | The [algorithm](http://help.monkeylearn.com/tips-and-tricks-for-custom-modules/parameters-changing-the-algorithm) used when training the model. It can either be "nb" or "svm".
+*language* | `str` | The [language](http://help.monkeylearn.com/tips-and-tricks-for-custom-modules/parameters-language) of the model. Full list of [supported languages](https://monkeylearn.com/api/v3/#classifier-detail).
+*max_features* | `int` | The [maximum amount of features](http://help.monkeylearn.com/tips-and-tricks-for-custom-modules/parameters-max-features) used when training the model. Between 10 and 100000.
+*ngram_range* | `tuple(int,int)` | Indicates which [N-gram range](http://help.monkeylearn.com/tips-and-tricks-for-custom-modules/parameters-n-gram-range) used when training the model. A list of two numbers between 1 and 3. The first one indicates the minimum and the second one the maximum N for the N-grams used.
+*use_stemming* | `bool`| Indicates whether [stemming](http://help.monkeylearn.com/tips-and-tricks-for-custom-modules/parameters-stemming) is used when training the model.
+*preprocess_numbers* | `bool` | Indicates whether [number preprocessing](http://help.monkeylearn.com/tips-and-tricks-for-custom-modules/parameters-preprocess-numbers) is done when training the model.
+*preprocess_social_media* | `bool` | Indicates whether [preprocessing for social media](http://help.monkeylearn.com/tips-and-tricks-for-custom-modules/parameters-social-media-preprocessing-and-regular-expressions) is done when training the model.
+*normalize_weights* | `bool` | Indicates whether [weights will be normalized](http://help.monkeylearn.com/tips-and-tricks-for-custom-modules/parameters-normalize-weights) when training the model.
+*stopwords* | `bool or list` |  The list of [stopwords](http://help.monkeylearn.com/tips-and-tricks-for-custom-modules/parameters-filter-stopwords) used when training the model. Use false for no stopwords, true for the default stopwords, or a list of strings for custom stopwords.
+*whitelist* | `list` | The [whitelist](http://help.monkeylearn.com/tips-and-tricks-for-custom-modules/parameters-whitelist) of words used when training the model.
+*sleep_if_throttle* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
+
+Example:
+
+```python
+response = ml.classifiers.edit('[MODEL_ID]', description='The new description of the classifier')
+```
+<br>
+
+#### [Delete classifier](https://monkeylearn.com/api/v3/?shell#delete-classifier)
 
 
 ```python
