@@ -7,6 +7,7 @@ from monkeylearn.base import ModelEndpointSet
 from monkeylearn.response import MonkeyLearnResponse
 from monkeylearn.settings import DEFAULT_BATCH_SIZE
 from monkeylearn.validation import validate_batch_size
+from monkeylearn.exceptions import MonkeyLearnException
 
 
 class Classification(ModelEndpointSet):
@@ -46,6 +47,10 @@ class Classification(ModelEndpointSet):
             'stopwords': stopwords,
             'whitelist': whitelist,
         })
+
+        if not data:
+            raise MonkeyLearnException('Provide at least one parameter to edit')
+
         url = self.get_detail_url(model_id)
         response = self.make_request('PATCH', url, data, retry_if_throttled=retry_if_throttled)
         return MonkeyLearnResponse(response)
