@@ -57,7 +57,7 @@ The response object returned by every endpoint call is a `MonkeyLearnResponse` o
 print(response.body)
 # =>  [
 # =>      {
-# =>          'text': 'Hola amigo, como estás?',
+# =>          'text': 'Great hotel with excellent location',
 # =>          'external_id': null,
 # =>          'error': false,
 # =>          'classifications': [
@@ -69,7 +69,7 @@ print(response.body)
 # =>          ]
 # =>      },
 # =>      {
-# =>          'text': 'Hello my friend, how are you?',
+# =>          'text': 'This is the worst hotel ever.',
 # =>          'external_id': null,
 # =>          'error': false,
 # =>          'classifications': [
