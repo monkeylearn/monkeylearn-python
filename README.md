@@ -40,12 +40,13 @@ From the MonkeyLearn client instance you can call any endpoint (check out the [a
 
 ```python
 response = ml.classifiers.classify(
-    model_id='cl_Jx8qzYJh,
+    model_id='cl_Jx8qzYJh',
     data=[
         'Great hotel with excellent location',
         'This is the worst hotel ever.'
     ]
 )
+
 ```
 
 ### Responses
@@ -108,7 +109,7 @@ except PlanQueryLimitError as e:
     # No monthly queries left
     # e.response contains the MonkeyLearnResponse object
     print(e.error_code, e.detail)
-except MonkeyLearnException
+except MonkeyLearnException:
     raise
 ```
 
@@ -160,35 +161,35 @@ else:
 This is very convenient and usually should be enough. If you need more flexibility, you can manage batching and rate limits yourself.
 
 ``` python
+import re
+from time import sleep
 from monkeylearn.exceptions import PlanQueryLimitError, ConcurrencyRateLimitError, PlanRateLimitError
 
 data = ['Text to classify'] * 300
 batch_size = 200
 predictions = []
 
-for i in range(0, len(data['data']), batch_size):
+for i in range(0, len(data), batch_size):
     batch_data = data[i:i + batch_size]
 
-    retry = False
+    retry = True
     while retry:
         try:
-            response = ml.classifiers.classify('cl_oJNMkt2V', batch_data, auto_batch=False,
+            response = ml.classifiers.classify('[MODEL_ID]', batch_data, auto_batch=False,
                                                retry_if_throttled=False)
         except PlanRateLimitError:
             retry = True
-            seconds = re.findall(r'available in (\d+) seconds', body['detail'])[0]
+            seconds = int(re.findall(r'available in (\d+) seconds', resoponse.body['detail'])[0])
             sleep(seconds)
         except ConcurrencyRateLimitError:
             retry = True
             sleep(2)
         except PlanQueryLimitError:
-            print('Out of queries')
-            break
+            raise
         else:
             retry = False
 
     predictions.extend(response.body)
-
 ```
 
 This way you'll be able to control every request that's sent to the MonkeyLearn API.
@@ -282,7 +283,7 @@ whitelist | `list` | The [whitelist](http://help.monkeylearn.com/tips-and-tricks
 Example:
 
 ```python
-response = ml.classifiers.create(name='Language detection', language='multi_language')
+response = ml.classifiers.create(name='New classifier', stopwords=True)
 ```
 <br>
 

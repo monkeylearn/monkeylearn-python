@@ -22,7 +22,7 @@ class MonkeyLearnResponse(object):
             last_response = self.raw_responses[-1]
         except IndexError:
             return None
-        return getattr(last_response.headers, header_name, None)
+        return last_response.headers.get(header_name)
 
     @property
     def request_count(self):
