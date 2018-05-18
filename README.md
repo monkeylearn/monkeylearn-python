@@ -123,8 +123,8 @@ Available exceptions:
 | `ForbiddenError`            | You don't have permissions to perform the action on the given resource. |
 | `ModelLimitError`           | You have reached the custom model limit for your plan. |
 | `ModelNotFound`             | The model does not exist, check the `model_id`. |
-| `CategoryNotFound`          | The classifier category does not exist, check the `category_id` parameter. |
-| `PlanQueryLimitError`           | You have reached the monthly query limit for your plan. Consider upgrading your plan. More about [Plan query limits](https://monkeylearn.com/api/v3/#query-limits). |
+| `TagNotFound`               | The tag does not exist, check the `tag_id` parameter. |
+| `PlanQueryLimitError`       | You have reached the monthly query limit for your plan. Consider upgrading your plan. More about [Plan query limits](https://monkeylearn.com/api/v3/#query-limits). |
 | `PlanRateLimitError`        | You have sent too many requests in the last minute. Checkout the exception detail. More about [Plan rate limit](https://monkeylearn.com/api/v3/#plan-rate-limit). |
 | `ConcurrencyRateLimitError` | You have sent too many requests in the last second. Checkout the exception detail. More about [Concurrency rate limit](https://monkeylearn.com/api/v3/#concurrecy-rate-limit). |
 

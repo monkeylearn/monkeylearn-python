@@ -58,7 +58,7 @@ class ModelNotFound(ResourceNotFound):
     pass
 
 
-class CategoryNotFound(ResourceNotFound):
+class TagNotFound(ResourceNotFound):
     pass
 
 # Rate limit (429)
@@ -83,7 +83,7 @@ class ConcurrencyRateLimitError(RateLimitError):
 # State errors (423)
 
 
-class ModuleStateError(MonkeyLearnResponseException):
+class ModelStateError(MonkeyLearnResponseException):
     pass
 
 
@@ -96,7 +96,7 @@ RESPONSE_CODES_EXCEPTION_MAP = {
     },
     404: {
         'MODEL_NOT_FOUND': ModelNotFound,
-        'CATEGORY_NOT_FOUND': CategoryNotFound,
+        'TAG_NOT_FOUND': TagNotFound,
         '*': ResourceNotFound,
     },
     429: {
@@ -105,7 +105,7 @@ RESPONSE_CODES_EXCEPTION_MAP = {
         'PLAN_QUERY_LIMIT': PlanQueryLimitError,
         '*': RateLimitError,
     },
-    423: ModuleStateError,
+    423: ModelStateError,
 }
 
 
