@@ -255,8 +255,8 @@ response = ml.classifiers.detail('[MODEL_ID]')
 
 
 ```python
-def MonkeyLearn.classifiers.create(name, description='', algorithm='nb, language='en,
-                                   max_features=10000, ngram_range=[1, 1], use_stemming=True,
+def MonkeyLearn.classifiers.create(name, description='', algorithm='nb', language='en',
+                                   max_features=10000, ngram_range=(1, 1), use_stemming=True,
                                    preprocess_numbers=True, preprocess_social_media=False,
                                    normalize_weights=True, stopwords=False, whitelist=None,
                                    retry_if_throttled=True)
@@ -266,19 +266,19 @@ Parameters:
 
 Parameter | Type | Description
 --------- | ------- | -----------
-name | `str` | The name of the model.
-description | `str` | The description of the model.
-algorithm | `str` | The [algorithm](http://help.monkeylearn.com/tips-and-tricks-for-custom-modules/parameters-changing-the-algorithm) used when training the model. It can either be "nb" or "svm".
-language | `str` | The [language](http://help.monkeylearn.com/tips-and-tricks-for-custom-modules/parameters-language) of the model. Full list of [supported languages](https://monkeylearn.com/api/v3/#classifier-detail).
-max_features | `int` | The [maximum amount of features](http://help.monkeylearn.com/tips-and-tricks-for-custom-modules/parameters-max-features) used when training the model. Between 10 and 100000.
-ngram_range | `tuple(int,int)` | Indicates which [N-gram range](http://help.monkeylearn.com/tips-and-tricks-for-custom-modules/parameters-n-gram-range) used when training the model. A list of two numbers between 1 and 3. The first one indicates the minimum and the second one the maximum N for the N-grams used.
-use_stemming | `bool`| Indicates whether [stemming](http://help.monkeylearn.com/tips-and-tricks-for-custom-modules/parameters-stemming) is used when training the model.
-preprocess_numbers | `bool` | Indicates whether [number preprocessing](http://help.monkeylearn.com/tips-and-tricks-for-custom-modules/parameters-preprocess-numbers) is done when training the model.
-preprocess_social_media | `bool` | Indicates whether [preprocessing for social media](http://help.monkeylearn.com/tips-and-tricks-for-custom-modules/parameters-social-media-preprocessing-and-regular-expressions) is done when training the model.
-normalize_weights | `bool` | Indicates whether [weights will be normalized](http://help.monkeylearn.com/tips-and-tricks-for-custom-modules/parameters-normalize-weights) when training the model.
-stopwords | `bool or list` |  The list of [stopwords](http://help.monkeylearn.com/tips-and-tricks-for-custom-modules/parameters-filter-stopwords) used when training the model. Use false for no stopwords, true for the default stopwords, or an array of strings for custom stopwords.
-whitelist | `list` | The [whitelist](http://help.monkeylearn.com/tips-and-tricks-for-custom-modules/parameters-whitelist) of words used when training the model.
-|*sleep_if_throttle* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
+*name* | `str` | The name of the model.
+*description* | `str` | The description of the model.
+*algorithm* | `str` | The [algorithm](http://help.monkeylearn.com/tips-and-tricks-for-custom-modules/parameters-changing-the-algorithm) used when training the model. It can either be "nb" or "svm".
+*language* | `str` | The [language](http://help.monkeylearn.com/tips-and-tricks-for-custom-modules/parameters-language) of the model. Full list of [supported languages](https://monkeylearn.com/api/v3/#classifier-detail).
+*max_features* | `int` | The [maximum amount of features](http://help.monkeylearn.com/tips-and-tricks-for-custom-modules/parameters-max-features) used when training the model. Between 10 and 100000.
+*ngram_range* | `tuple(int,int)` | Indicates which [N-gram range](http://help.monkeylearn.com/tips-and-tricks-for-custom-modules/parameters-n-gram-range) used when training the model. A list of two numbers between 1 and 3. The first one indicates the minimum and the second one the maximum N for the N-grams used.
+*use_stemming* | `bool`| Indicates whether [stemming](http://help.monkeylearn.com/tips-and-tricks-for-custom-modules/parameters-stemming) is used when training the model.
+*preprocess_numbers* | `bool` | Indicates whether [number preprocessing](http://help.monkeylearn.com/tips-and-tricks-for-custom-modules/parameters-preprocess-numbers) is done when training the model.
+*preprocess_social_media* | `bool` | Indicates whether [preprocessing for social media](http://help.monkeylearn.com/tips-and-tricks-for-custom-modules/parameters-social-media-preprocessing-and-regular-expressions) is done when training the model.
+*normalize_weights* | `bool` | Indicates whether [weights will be normalized](http://help.monkeylearn.com/tips-and-tricks-for-custom-modules/parameters-normalize-weights) when training the model.
+*stopwords* | `bool or list` |  The list of [stopwords](http://help.monkeylearn.com/tips-and-tricks-for-custom-modules/parameters-filter-stopwords) used when training the model. Use false for no stopwords, true for the default stopwords, or a list of strings for custom stopwords.
+*whitelist* | `list` | The [whitelist](http://help.monkeylearn.com/tips-and-tricks-for-custom-modules/parameters-whitelist) of words used when training the model.
+*sleep_if_throttle* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
 
 Example:
 
@@ -390,7 +390,7 @@ Parameters:
 |--------------------|-------------------|-----------------------------------------------------------|
 |*model_id*          |`str`              |Classifier ID. Always starts with `'cl'`, for example `'cl_oJNMkt2V'`. |
 |*name*              |`str`              |The name of the new tag. |
-|*parent_id*         |`int`              |**DEPRECATED**. The ID of the parent tag. |
+|*parent_id*         |`int`              |**DEPRECATED** (only for v2 models). The ID of the parent tag. |
 |*sleep_if_throttle* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
 
 Example:
@@ -406,7 +406,7 @@ response = ml.classifiers.tags.create('[MODEL_ID]', 'Positive')
 
 ```python
 def MonkeyLearn.classifiers.tags.edit(model_id, tag_id, name=None, parent_id=None,
-                                            retry_if_throttled=True)
+                                      retry_if_throttled=True)
 ```
 
 Parameters:
@@ -431,7 +431,7 @@ response = ml.classifiers.tags.edit('[MODEL_ID]', 25, 'New name')
 
 ```python
 def MonkeyLearn.classifiers.tags.delete(model_id, tag_id, move_data_to=None,
-                                              retry_if_throttled=True)
+                                        retry_if_throttled=True)
 ```
 
 Parameters:
@@ -479,7 +479,7 @@ Example:
 ```python
 response = ml.classifiers.upload_data(
     model_id='[MODEL_ID]',
-    data=[{'text': 'text 1', tags': [15, 20]}]
+    data=[{'text': 'text 1', 'tags': [15, 20]}]
 )
 ```
 
