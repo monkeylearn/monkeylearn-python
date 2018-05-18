@@ -1,4 +1,4 @@
-# MonkeyLearn API for python
+# MonkeyLearn API for Python
 
 Official Python client for the [MonkeyLearn API](https://monkeylearn.com/api/). Build and run machine learning models for language processing from your Python apps.
 
@@ -24,7 +24,7 @@ Usage
 ------
 
 
-Before making requests to the API you need to create an instance of the MonkeyLearn client, using your account API Key:
+Before making requests to the API you need to create an instance of the MonkeyLearn client, using your [account API Key](https://app.monkeylearn.com/main/my-account/tab/api-keys/):
 
 ```python
 from monkeylearn import MonkeyLearn
