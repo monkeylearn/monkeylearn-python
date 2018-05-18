@@ -49,7 +49,7 @@ class MonkeyLearnResponse(object):
             if self.raw_responses[0].content:
                 return self.raw_responses[0].json()
             else:
-                return ''
+                return None
         # Batched response, assume 2xx response bodies are lists (classify, extract)
         return [result for rr in self.raw_responses for result in rr.json() if rr.content]
 
