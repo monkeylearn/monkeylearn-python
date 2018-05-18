@@ -104,7 +104,7 @@ Endpoint calls may raise exceptions. Here is an example on how to handle them:
 from monkeylearn.exceptions import PlanQueryLimitError, MonkeyLearnException
 
 try:
-    response = ml.classifiers.classify('cl_XXXXXXXX', data=['My text'])
+    response = ml.classifiers.classify('[MODEL_ID]', data=['My text'])
 except PlanQueryLimitError as e:
     # No monthly queries left
     # e.response contains the MonkeyLearnResponse object
@@ -137,7 +137,7 @@ Let's say you send a `data` parameter with 300 texts and `auto_batch` enabled. T
 
 ``` python
 data = ['Text to classify'] * 300
-response = ml.classifiers.classify('cl_oJNMkt2V', data)
+response = ml.classifiers.classify('[MODEL_ID]', data)
 assert len(response.body) == 300  # => True
 ```
 
@@ -150,7 +150,7 @@ data = ['Text to classify'] * 300
 batch_size = 200
 
 try:
-    response = ml.classifiers.classify('cl_oJNMkt2V', data, batch_size=batch_size)
+    response = ml.classifiers.classify('[MODEL_ID]', data, batch_size=batch_size)
 except PlanQueryLimitError as e:
     partial_predictions = e.response.body  # The body of the successful responses
     non_2xx_raw_responses = r.response.failed_raw_responses  # List of requests responses objects
@@ -224,7 +224,7 @@ Example:
 
 ```python
 data = ['First text', {'text': 'Second text', 'external_id': '2'}]
-response = ml.classifiers.classify('cl_oJNMkt2V', data)
+response = ml.classifiers.classify('[MODEL_ID]', data)
 ```
 
 <br>
@@ -246,7 +246,7 @@ Parameters:
 Example:
 
 ```python
-response = ml.classifiers.detail('cl_oJNMkt2V')
+response = ml.classifiers.detail('[MODEL_ID]')
 ```
 
 <br>
@@ -304,7 +304,7 @@ Parameters:
 Example:
 
 ```python
-response = ml.classifiers.delete('cl_JkNtoMV2')
+response = ml.classifiers.delete('[MODEL_ID]')
 ```
 
 <br>
@@ -349,7 +349,7 @@ Parameters:
 Example:
 
 ```python
-response = ml.classifiers.deploy('cl_JkNtoMV2')
+response = ml.classifiers.deploy('[MODEL_ID]')
 ```
 
 <br>
@@ -372,7 +372,7 @@ Parameters:
 Example:
 
 ``` python
-response = ml.classifiers.categories.detail('cl_JkNtoMV2', 25)
+response = ml.classifiers.categories.detail('[MODEL_ID]', 25)
 ```
 
 <br>
@@ -396,7 +396,7 @@ Parameters:
 Example:
 
 ```python
-response = ml.classifiers.categories.create('cl_XXXXXXXX, 'Positive')
+response = ml.classifiers.categories.create('[MODEL_ID]', 'Positive')
 ```
 
 <br>
@@ -421,7 +421,7 @@ Parameters:
 Example:
 
 ```python
-response = ml.classifiers.categories.edit('cl_XXXXXXXX, 25, 'New name')
+response = ml.classifiers.categories.edit('[MODEL_ID]', 25, 'New name')
 ```
 
 <br>
@@ -446,7 +446,7 @@ Parameters:
 Example:
 
 ```python
-response = ml.classifiers.categories.delete('cl_XXXXXXXX, 25)
+response = ml.classifiers.categories.delete('[MODEL_ID]', 25)
 ```
 
 <br>
@@ -478,7 +478,7 @@ Example:
 
 ```python
 response = ml.classifiers.upload_data(
-    model_id='cl_XXXXXXXX',
+    model_id='[MODEL_ID]',
     data=[{'text': 'text 1', 'categories': [15, 20]}]
 )
 ```
@@ -502,15 +502,15 @@ Parameters:
 |--------------------|-------------------|-----------------------------------------------------------|
 |*model_id*          |`str`              |Extractor ID. Always starts with `'ex'`, for example `'ex_oJNMkt2V'`. |
 |*data*              |`list[str or dict]`|A list of up to 200 data elements to extract. Each element must be a *string* with the text or a *dict* with the required `text` key and the text as the value and an optional `external_id` key with a string that will be included in the response.  |
-|*production_model*  |`bool`             |Indicates if the extractions are performed by the production model. Only use this parameter on *custom models*. Note that you first need to deploy the production model from the UI model settings. |
-|*batch_size*        |`int`              |Max amount of texts each request will send to MonkeyLearn. |
+|*production_model*  |`bool`             |Indicates if the extractions are performed by the production model. Only use this parameter with *custom models* (not with the public ones). Note that you first need to deploy the production model from the UI model settings. |
+|*batch_size*        |`int`              |Max amount of texts each request will send to MonkeyLearn. A number from 1 to 200. |
 |*sleep_if_throttle* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
 
 Example:
 
 ```python
 data = ['First text', {'text': 'Second text', 'external_id': '2'}]
-response = ml.extractors.extract('ex_NokMJtV2', data=data)
+response = ml.extractors.extract('[MODEL_ID]', data=data)
 ```
 
 <br>
@@ -532,7 +532,7 @@ Parameters:
 Example:
 
 ```python
-response = ml.extractors.detail('ex_NokMJtV2')
+response = ml.extractors.detail('[MODEL_ID]')
 ```
 
 <br>
