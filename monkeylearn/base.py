@@ -53,8 +53,7 @@ class ModelEndpointSet(object):
                 'Content-Type': 'application/json'
             })
 
-            if response.content != '':
-                print(response.content)
+            if response.content:
                 body = response.json()
 
             if retry_if_throttled and response.status_code == 429:
