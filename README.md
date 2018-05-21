@@ -118,15 +118,16 @@ Available exceptions:
 | class                       | Description |
 |-----------------------------|-------------|
 | `MonkeyLearnException`      | Base class for every exception below.                                  |
-| `RequestParamsError`        | An invalid parameter was send. Checkout the exception message or response object for more information. |
+| `RequestParamsError`        | An invalid parameter was send. Check the exception message or response object for more information. |
 | `AuthenticationError`       | Authentication failed, usually because an invalid token was provided. For more information, check the exception message. More about [Authentication](https://monkeylearn.com/api/v3/#authentication). |
 | `ForbiddenError`            | You don't have permissions to perform the action on the given resource. |
 | `ModelLimitError`           | You have reached the custom model limit for your plan. |
 | `ModelNotFound`             | The model does not exist, check the `model_id`. |
 | `TagNotFound`               | The tag does not exist, check the `tag_id` parameter. |
 | `PlanQueryLimitError`       | You have reached the monthly query limit for your plan. Consider upgrading your plan. More about [Plan query limits](https://monkeylearn.com/api/v3/#query-limits). |
-| `PlanRateLimitError`        | You have sent too many requests in the last minute. Checkout the exception detail. More about [Plan rate limit](https://monkeylearn.com/api/v3/#plan-rate-limit). |
-| `ConcurrencyRateLimitError` | You have sent too many requests in the last second. Checkout the exception detail. More about [Concurrency rate limit](https://monkeylearn.com/api/v3/#concurrecy-rate-limit). |
+| `PlanRateLimitError`        | You have sent too many requests in the last minute. Check the exception detail. More about [Plan rate limit](https://monkeylearn.com/api/v3/#plan-rate-limit). |
+| `ConcurrencyRateLimitError` | You have sent too many requests in the last second. Check the exception detail. More about [Concurrency rate limit](https://monkeylearn.com/api/v3/#concurrecy-rate-limit). |
+| `ModuleStateError`          | The state of the module is invalid. Check the exception detail.  |
 
 
 ### Auto-batching
