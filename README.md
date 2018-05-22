@@ -206,8 +206,8 @@ These are all the endpoints of the API. For more information about each endpoint
 
 
 ```python
-def MonkeyLearn.classifiers.classify(model_id, data, production_model=None, batch_size=200,
-                                     auto_batch=True, sleep_if_throttle=True)
+def MonkeyLearn.classifiers.classify(model_id, data, production_model=False, batch_size=200,
+                                     auto_batch=True, retry_if_throttled=True)
 ```
 
 Parameters:
@@ -234,7 +234,7 @@ response = ml.classifiers.classify('[MODEL_ID]', data)
 
 
 ```python
-def MonkeyLearn.classifiers.detail(model_id)
+def MonkeyLearn.classifiers.detail(model_id, retry_if_throttled=True)
 ```
 
 Parameters:

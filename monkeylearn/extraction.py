@@ -22,7 +22,7 @@ class Extraction(ModelEndpointSet):
         response = self.make_request('GET', url, retry_if_throttled=retry_if_throttled)
         return MonkeyLearnResponse(response)
 
-    def extract(self, model_id, data, production_model=None, batch_size=DEFAULT_BATCH_SIZE,
+    def extract(self, model_id, data, production_model=False, batch_size=DEFAULT_BATCH_SIZE,
                 retry_if_throttled=True, extra_args=None):
         if extra_args is None:
             extra_args = {}

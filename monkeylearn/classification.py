@@ -65,9 +65,9 @@ class Classification(ModelEndpointSet):
         response = self.make_request('DELETE', url, retry_if_throttled=retry_if_throttled)
         return MonkeyLearnResponse(response)
 
-    def create(self, name, description=None, algorithm=None, language=None, max_features=None,
-               ngram_range=None, use_stemming=None, preprocess_numbers=None,
-               preprocess_social_media=None, normalize_weights=None, stopwords=None,
+    def create(self, name, description='', algorithm='nb', language='en', max_features=10000,
+               ngram_range=(1, 1), use_stemming=True, preprocess_numbers=True,
+               preprocess_social_media=False, normalize_weights=True, stopwords=True,
                whitelist=None, retry_if_throttled=True):
         data = self.remove_none_value({
             'name': name,
@@ -87,7 +87,7 @@ class Classification(ModelEndpointSet):
         response = self.make_request('POST', url, data, retry_if_throttled=retry_if_throttled)
         return MonkeyLearnResponse(response)
 
-    def classify(self, model_id, data, production_model=None, batch_size=DEFAULT_BATCH_SIZE,
+    def classify(self, model_id, data, production_model=False, batch_size=DEFAULT_BATCH_SIZE,
                  auto_batch=True, retry_if_throttled=True):
         validate_batch_size(batch_size)
 
