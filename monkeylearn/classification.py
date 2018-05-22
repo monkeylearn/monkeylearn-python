@@ -48,9 +48,6 @@ class Classification(ModelEndpointSet):
             'whitelist': whitelist,
         })
 
-        if not data:
-            raise MonkeyLearnException('Provide at least one parameter to edit')
-
         url = self.get_detail_url(model_id)
         response = self.make_request('PATCH', url, data, retry_if_throttled=retry_if_throttled)
         return MonkeyLearnResponse(response)
