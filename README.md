@@ -259,7 +259,7 @@ response = ml.classifiers.detail('[MODEL_ID]')
 def MonkeyLearn.classifiers.create(name, description='', algorithm='nb', language='en',
                                    max_features=10000, ngram_range=(1, 1), use_stemming=True,
                                    preprocess_numbers=True, preprocess_social_media=False,
-                                   normalize_weights=True, stopwords=False, whitelist=None,
+                                   normalize_weights=True, stopwords=True, whitelist=None,
                                    retry_if_throttled=True)
 ```
 
