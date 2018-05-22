@@ -219,7 +219,7 @@ Parameters:
 |*production_model*  |`bool`             |Indicates if the classifications are performed by the production model. Only use this parameter with *custom models* (not with the public ones). Note that you first need to deploy the production model from the UI model settings or using the [Classifier deploy endpoint](#deploy). |
 |*batch_size*        |`int`              |Max amount of texts each request will send to MonkeyLearn. A number from 1 to 200. |
 |*auto_batch*         |`bool`             |Split the `data` list into smaller valid lists, send each one in separate request to MonkeyLearn, and merge the responses together. |
-|*sleep_if_throttle* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
+|*retry_if_throttled* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
 
 Example:
 
@@ -242,7 +242,7 @@ Parameters:
 | Parameter          |Type               | Description                                               |
 |--------------------|-------------------|-----------------------------------------------------------|
 |*model_id*          |`str`              |Classifier ID. Always starts with `'cl'`, for example `'cl_oJNMkt2V'`. |
-|*sleep_if_throttle* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
+|*retry_if_throttled* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
 
 Example:
 
@@ -279,7 +279,7 @@ Parameter | Type | Description
 *normalize_weights* | `bool` | Indicates whether [weights will be normalized](http://help.monkeylearn.com/tips-and-tricks-for-custom-modules/parameters-normalize-weights) when training the model.
 *stopwords* | `bool or list` |  The list of [stopwords](http://help.monkeylearn.com/tips-and-tricks-for-custom-modules/parameters-filter-stopwords) used when training the model. Use false for no stopwords, true for the default stopwords, or a list of strings for custom stopwords.
 *whitelist* | `list` | The [whitelist](http://help.monkeylearn.com/tips-and-tricks-for-custom-modules/parameters-whitelist) of words used when training the model.
-*sleep_if_throttle* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
+*retry_if_throttled* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
 
 Example:
 
@@ -316,7 +316,7 @@ Parameter | Type | Description
 *normalize_weights* | `bool` | Indicates whether [weights will be normalized](http://help.monkeylearn.com/tips-and-tricks-for-custom-modules/parameters-normalize-weights) when training the model.
 *stopwords* | `bool or list` |  The list of [stopwords](http://help.monkeylearn.com/tips-and-tricks-for-custom-modules/parameters-filter-stopwords) used when training the model. Use false for no stopwords, true for the default stopwords, or a list of strings for custom stopwords.
 *whitelist* | `list` | The [whitelist](http://help.monkeylearn.com/tips-and-tricks-for-custom-modules/parameters-whitelist) of words used when training the model.
-*sleep_if_throttle* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
+*retry_if_throttled* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
 
 Example:
 
@@ -337,7 +337,7 @@ Parameters:
 | Parameter          |Type               | Description                                               |
 |--------------------|-------------------|-----------------------------------------------------------|
 |*model_id*          |`str`              |Classifier ID. Always starts with `'cl'`, for example `'cl_oJNMkt2V'`. |
-|*sleep_if_throttle* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
+|*retry_if_throttled* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
 
 Example:
 
@@ -360,7 +360,7 @@ Parameters:
 |--------------------|-------------------|-------------|
 |*page*              |`int`              |Specifies which page to get.|
 |*per_page*          |`int`              |Specifies how many items to return per page. |
-|*sleep_if_throttle* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
+|*retry_if_throttled* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
 
 Example:
 
@@ -382,7 +382,7 @@ Parameters:
 | Parameter          |Type               | Description                                               |
 |--------------------|-------------------|-----------------------------------------------------------|
 |*model_id*          |`str`              |Classifier ID. Always starts with `'cl'`, for example `'cl_oJNMkt2V'`. |
-|*sleep_if_throttle* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
+|*retry_if_throttled* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
 
 Example:
 
@@ -405,7 +405,7 @@ Parameters:
 |--------------------|-------------------|-----------------------------------------------------------|
 |*model_id*          |`str`              |Classifier ID. Always starts with `'cl'`, for example `'cl_oJNMkt2V'`. |
 |*tag_id*       |`int`              |Tag ID. |
-|*sleep_if_throttle* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
+|*retry_if_throttled* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
 
 Example:
 
@@ -429,7 +429,7 @@ Parameters:
 |*model_id*          |`str`              |Classifier ID. Always starts with `'cl'`, for example `'cl_oJNMkt2V'`. |
 |*name*              |`str`              |The name of the new tag. |
 |*parent_id*         |`int`              |**DEPRECATED** (only for v2 models). The ID of the parent tag. |
-|*sleep_if_throttle* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
+|*retry_if_throttled* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
 
 Example:
 
@@ -454,7 +454,7 @@ Parameters:
 |*model_id*          |`str`              |Classifier ID. Always starts with `'cl'`, for example `'cl_oJNMkt2V'`. |
 |*tag_id*       |`int`              |Tag ID. |
 |*name*              |`str`              |The new name of the tag. |
-|*sleep_if_throttle* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
+|*retry_if_throttled* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
 
 Example:
 
@@ -479,7 +479,7 @@ Parameters:
 |*model_id*          |`str`              |Classifier ID. Always starts with `'cl'`, for example `'cl_oJNMkt2V'`. |
 |*tag_id*       |`int`              |Tag ID. |
 |*move_data_to*      |`int`              |An optional tag ID. If provided, training data associated with the tag will be moved to the specified tag before deletion. |
-|*sleep_if_throttle* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
+|*retry_if_throttled* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
 
 Example:
 
@@ -502,7 +502,7 @@ Parameters:
 |--------------------|-------------------|-----------------------------------------------------------|
 |*model_id*          |`str`              |Classifier ID. Always starts with `'cl'`, for example `'cl_oJNMkt2V'`. |
 |*data*              |`list[dict]`        |A list of dicts with the keys described below.
-|*sleep_if_throttle* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
+|*retry_if_throttled* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
 
 `data` dict keys:
 
@@ -542,7 +542,7 @@ Parameters:
 |*data*              |`list[str or dict]`|A list of up to 200 data elements to extract. Each element must be a *string* with the text or a *dict* with the required `text` key and the text as the value and an optional `external_id` key with a string that will be included in the response.  |
 |*production_model*  |`bool`             |Indicates if the extractions are performed by the production model. Only use this parameter with *custom models* (not with the public ones). Note that you first need to deploy the production model from the UI model settings. |
 |*batch_size*        |`int`              |Max amount of texts each request will send to MonkeyLearn. A number from 1 to 200. |
-|*sleep_if_throttle* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
+|*retry_if_throttled* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
 
 Example:
 
@@ -565,7 +565,7 @@ Parameters:
 | Parameter          |Type               | Description                                               |
 |--------------------|-------------------|-----------------------------------------------------------|
 |*model_id*          |`str`              |Extractor ID. Always starts with `'ex'`, for example `'ex_oJNMkt2V'`. |
-|*sleep_if_throttle* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
+|*retry_if_throttled* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
 
 Example:
 
@@ -588,7 +588,7 @@ Parameters:
 |--------------------|-------------------|-------------|
 |*page*              |`int`              |Specifies which page to get.|
 |*per_page*          |`int`              |Specifies how many items to return per page. |
-|*sleep_if_throttle* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
+|*retry_if_throttled* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
 
 Example:
 
