@@ -35,7 +35,7 @@ ml = MonkeyLearn('<YOUR API TOKEN HERE>')
 
 ### Requests
 
-From the MonkeyLearn client instance you can call any endpoint (check out the [available endpoints](#available-endpoints) below). For example you can [classify](#classify) a list of texts (`data` parameter) using the public [Sentiment analysis classifier](https://app.monkeylearn.com/main/classifiers/cl_oJNMkt2V/):
+From the MonkeyLearn client instance you can call any endpoint (check the [available endpoints](#available-endpoints) below). For example you can [classify](#classify) a list of texts using the public [Sentiment analysis classifier](https://app.monkeylearn.com/main/classifiers/cl_oJNMkt2V/):
 
 
 ```python
