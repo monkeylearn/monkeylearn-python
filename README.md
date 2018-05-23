@@ -454,6 +454,7 @@ Parameters:
 |*model_id*          |`str`              |Classifier ID. Always starts with `'cl'`, for example `'cl_oJNMkt2V'`. |
 |*tag_id*       |`int`              |Tag ID. |
 |*name*              |`str`              |The new name of the tag. |
+|*parent_id*         |`int`              |**DEPRECATED** (only for v2 models). The new parent tag ID. |
 |*retry_if_throttled* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
 
 Example:
@@ -575,7 +576,7 @@ response = ml.extractors.detail('[MODEL_ID]')
 
 <br>
 
-#### [Extractor list](https://monkeylearn.com/api/v3/?shell#list-extractors)
+#### [List extractors](https://monkeylearn.com/api/v3/?shell#list-extractors)
 
 
 ```python
