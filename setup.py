@@ -2,17 +2,22 @@
 # -*- coding: utf-8 -*-
 from setuptools import setup, find_packages
 
+with open('README.md', 'r') as fh:
+    long_description = fh.read()
+
 setup(
     name='monkeylearn',
     version='3.0.0',
     author='MonkeyLearn',
     author_email='hello@monkeylearn.com',
     description='Official Python client for the MonkeyLearn API',
+    long_description=long_description,
+    long_description_content_type="text/markdown",
     url='https://github.com/monkeylearn/monkeylearn-python',
     download_url='https://github.com/monkeylearn/monkeylearn-python/tarball/v3.0.0-pre',
     keywords=['monkeylearn', 'machine learning', 'python'],
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 5 - Production/Stable',
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 3',
         'License :: OSI Approved :: MIT License',
