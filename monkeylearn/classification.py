@@ -1,213 +1,144 @@
 # -*- coding: utf-8 -*-
-from __future__ import (
-    print_function, unicode_literals, division, absolute_import)
+from __future__ import print_function, unicode_literals, division, absolute_import
 
-import six
-import warnings
 from six.moves import range
-try:
-    from urllib import urlencode
-except:  # For Python 3
-    from urllib.parse import urlencode
 
-from monkeylearn.utils import SleepRequestsMixin, MonkeyLearnResponse, HandleErrorsMixin
-from monkeylearn.settings import DEFAULT_BASE_ENDPOINT, DEFAULT_BATCH_SIZE
+from monkeylearn.base import ModelEndpointSet
+from monkeylearn.response import MonkeyLearnResponse
+from monkeylearn.settings import DEFAULT_BATCH_SIZE
+from monkeylearn.validation import validate_batch_size
 from monkeylearn.exceptions import MonkeyLearnException
 
 
-class Classification(SleepRequestsMixin, HandleErrorsMixin):
-
-    def __init__(self, token, base_endpoint=DEFAULT_BASE_ENDPOINT):
-        self.token = token
-        self.endpoint = base_endpoint + 'classifiers/'
+class Classification(ModelEndpointSet):
+    model_type = 'classifiers'
 
     @property
-    def categories(self):
-        return Categories(self.token, self.endpoint)
+    def tags(self):
+        if not hasattr(self, '_tags'):
+            self._tags = Tags(self.token, self.base_url)
+        return self._tags
 
-    def classify(self, module_id, sample_list=None, sandbox=False,
-                 batch_size=DEFAULT_BATCH_SIZE, sleep_if_throttled=True,
-                 debug=False, text_list=None, **kwargs):
+    def list(self, page=1, per_page=20, retry_if_throttled=True):
+        url = self.get_list_url(query_string={'page': page, 'per_page': per_page})
+        response = self.make_request('GET', url, retry_if_throttled=retry_if_throttled)
+        return MonkeyLearnResponse(response)
 
-        if text_list:
-            warnings.warn("The text_list parameter will be deprecated in future versions. Please use sample_list.")
-            sample_list = text_list
+    def detail(self, model_id, retry_if_throttled=True):
+        url = self.get_detail_url(model_id)
+        response = self.make_request('GET', url, retry_if_throttled=retry_if_throttled)
+        return MonkeyLearnResponse(response)
 
-        try:
-            sample_list = list(sample_list)
-        except TypeError:
-            raise MonkeyLearnException('The sample_list can\'t be None.')
-        self.check_batch_limits(sample_list, batch_size)
+    def edit(self, model_id, name=None, description=None, algorithm=None, language=None,
+             max_features=None, ngram_range=None, use_stemming=None, preprocess_numbers=None,
+             preprocess_social_media=None, normalize_weights=None, stopwords=None,
+             whitelist=None, retry_if_throttled=True):
+        data = self.remove_none_value({
+            'name': name,
+            'description': description,
+            'algorithm': algorithm,
+            'language': language,
+            'max_features': max_features,
+            'ngram_range': ngram_range,
+            'use_stemming': use_stemming,
+            'preprocess_numbers': preprocess_numbers,
+            'preprocess_social_media': preprocess_social_media,
+            'normalize_weights': normalize_weights,
+            'stopwords': stopwords,
+            'whitelist': whitelist,
+        })
 
-        url = self.endpoint + module_id + '/classify/'
-        url_params = {}
-        if sandbox:
-            url_params['sandbox'] = 1
-        if debug:
-            url_params['debug'] = 1
-        if kwargs is not None:
-            for key, value in six.iteritems(kwargs):
-                url_params[key] = value
-        if url_params:
-            url += '?{}'.format(urlencode(url_params))
+        url = self.get_detail_url(model_id)
+        response = self.make_request('PATCH', url, data, retry_if_throttled=retry_if_throttled)
+        return MonkeyLearnResponse(response)
 
-        res = []
-        responses = []
-        for i in range(0, len(sample_list), batch_size):
-            # if is multi feature
-            if isinstance(sample_list[0], dict):
-                data = {
-                    'sample_list': sample_list[i:i + batch_size]
-                }
-            else:
-                data = {
-                    'text_list': sample_list[i:i + batch_size]
-                }
-            response = self.make_request(url, 'POST', data, sleep_if_throttled)
-            self.handle_errors(response)
-            responses.append(response)
-            res.extend(response.json()['result'])
+    def deploy(self, model_id, retry_if_throttled=True):
+        url = self.get_detail_url(model_id, action='deploy')
+        response = self.make_request('POST', url, retry_if_throttled=retry_if_throttled)
+        return MonkeyLearnResponse(response)
 
-        return MonkeyLearnResponse(res, responses)
+    def delete(self, model_id, retry_if_throttled=True):
+        url = self.get_detail_url(model_id)
+        response = self.make_request('DELETE', url, retry_if_throttled=retry_if_throttled)
+        return MonkeyLearnResponse(response)
 
-    def list(self, sleep_if_throttled=True):
-        url = self.endpoint
-        response = self.make_request(url, 'GET', sleep_if_throttled=sleep_if_throttled)
-        self.handle_errors(response)
-        return MonkeyLearnResponse(response.json()['result'], [response])
+    def create(self, name, description='', algorithm='nb', language='en', max_features=10000,
+               ngram_range=(1, 1), use_stemming=True, preprocess_numbers=True,
+               preprocess_social_media=False, normalize_weights=True, stopwords=True,
+               whitelist=None, retry_if_throttled=True):
+        data = self.remove_none_value({
+            'name': name,
+            'description': description,
+            'algorithm': algorithm,
+            'language': language,
+            'max_features': max_features,
+            'ngram_range': ngram_range,
+            'use_stemming': use_stemming,
+            'preprocess_numbers': preprocess_numbers,
+            'preprocess_social_media': preprocess_social_media,
+            'normalize_weights': normalize_weights,
+            'stopwords': stopwords,
+            'whitelist': whitelist,
+        })
+        url = self.get_list_url()
+        response = self.make_request('POST', url, data, retry_if_throttled=retry_if_throttled)
+        return MonkeyLearnResponse(response)
 
-    def detail(self, module_id, sleep_if_throttled=True):
-        url = self.endpoint + module_id
-        response = self.make_request(url, 'GET', sleep_if_throttled=sleep_if_throttled)
-        self.handle_errors(response)
-        return MonkeyLearnResponse(response.json()['result'], [response])
+    def classify(self, model_id, data, production_model=False, batch_size=DEFAULT_BATCH_SIZE,
+                 auto_batch=True, retry_if_throttled=True):
+        validate_batch_size(batch_size)
 
-    def upload_samples(self, module_id, samples_with_categories, sleep_if_throttled=True,
-                       features_schema=None):
-        url = self.endpoint + module_id + '/samples/'
-        samples = []
-        for i, s in enumerate(samples_with_categories):
-            # if is multi-feature
-            if isinstance(s[0], dict):
-                sample_dict = {"features": s[0]}
-            elif isinstance(s[0], six.string_types):
-                sample_dict = {"text": s[0]}
-            else:
-                raise MonkeyLearnException('The sample must be a text in sample ' + str(i))
+        url = self.get_detail_url(model_id, action='classify')
 
-            if (isinstance(s[1], int) or
-                    (isinstance(s[1], list) and all(isinstance(c, int) for c in s[1]))):
-                sample_dict["category_id"] = s[1]
-            elif (isinstance(s[1], six.string_types) or
-                    (isinstance(s[1], list) and all(isinstance(c, six.string_types) for c in s[1]))):
-                sample_dict["category_path"] = s[1]
-            elif s[1] is not None:
-                raise MonkeyLearnException('Invalid category value in sample ' + str(i))
+        response = MonkeyLearnResponse()
+        for i in range(0, len(data), batch_size):
+            data_dict = self.remove_none_value({
+                'data': data[i:i + batch_size],
+                'production_model': production_model,
+            })
+            raw_response = self.make_request('POST', url, data_dict,
+                                             retry_if_throttled=retry_if_throttled)
+            response.add_raw_response(raw_response)
 
-            if (len(s) > 2 and s[2] and (isinstance(s[2], six.string_types) or
-                    (isinstance(s[2], list) and all(isinstance(c, six.string_types) for c in s[2])))):
-                sample_dict['tag'] = s[2]
+        return response
 
-            samples.append(sample_dict)
-        data = {
-            'samples': samples
-        }
-        if features_schema:
-            data['features_schema'] = features_schema
-        response = self.make_request(url, 'POST', data, sleep_if_throttled)
-        self.handle_errors(response)
-        return MonkeyLearnResponse(response.json()['result'], [response])
+    def upload_data(self, model_id, data, retry_if_throttled=True):
+        url = self.get_detail_url(model_id, action='data')
+        data_dict = {'data': data}
+        response = self.make_request('POST', url, data_dict, retry_if_throttled=retry_if_throttled)
+        return MonkeyLearnResponse(response)
 
-    def train(self, module_id, sleep_if_throttled=True):
-        url = self.endpoint + module_id + '/train/'
-        response = self.make_request(url, 'POST', sleep_if_throttled=sleep_if_throttled)
-        self.handle_errors(response)
-        return MonkeyLearnResponse(response.json()['result'], [response])
 
-    def deploy(self, module_id, sleep_if_throttled=True):
-        url = self.endpoint + module_id + '/deploy/'
-        response = self.make_request(url, 'POST', sleep_if_throttled=sleep_if_throttled)
-        self.handle_errors(response)
-        return MonkeyLearnResponse(response.json()['result'], [response])
+class Tags(ModelEndpointSet):
+    model_type = ('classifiers', 'tags')
 
-    def delete(self, module_id, sleep_if_throttled=True):
-        url = self.endpoint + module_id + '/'
-        response = self.make_request(url, 'DELETE', sleep_if_throttled=sleep_if_throttled)
-        self.handle_errors(response)
-        return MonkeyLearnResponse(response.json()['result'], [response])
+    def detail(self, model_id, tag_id, retry_if_throttled=True):
+        url = self.get_nested_detail_url(model_id, tag_id)
+        response = self.make_request('GET', url, retry_if_throttled=retry_if_throttled)
+        return MonkeyLearnResponse(response)
 
-    def create(self, name, description=None, train_state=None, language=None, ngram_range=None,
-               use_stemmer=None, stop_words=None, max_features=None, strip_stopwords=None,
-               is_multilabel=None, is_twitter_data=None, normalize_weights=None,
-               classifier=None, industry=None, classifier_type=None, text_type=None, permissions=None,
-               sleep_if_throttled=True):
-        data = {
-            "name": name,
-            "description": description,
-            "train_state": train_state,
-            "language": language,
-            "ngram_range": ngram_range,
-            "use_stemmer": use_stemmer,
-            "stop_words": stop_words,
-            "max_features": max_features,
-            "strip_stopwords": strip_stopwords,
-            "is_multilabel": is_multilabel,
-            "is_twitter_data": is_twitter_data,
-            "normalize_weights": normalize_weights,
-            "classifier": classifier,
-            "industry": industry,
-            "classifier_type": classifier_type,
-            "text_type": text_type,
-            "permissions": permissions
-        }
-        data = {key: value for key, value in six.iteritems(data) if value is not None}
-
-        url = self.endpoint
-        response = self.make_request(url, 'POST', data, sleep_if_throttled)
-        self.handle_errors(response)
-        return MonkeyLearnResponse(response.json()['result'], [response])
-
-class Categories(SleepRequestsMixin, HandleErrorsMixin):
-
-    def __init__(self, token, endpoint):
-        self.token = token
-        self.endpoint = endpoint
-
-    def detail(self, module_id, category_id, sleep_if_throttled=True):
-        url = self.endpoint + module_id + '/categories/' + str(category_id) + '/'
-        response = self.make_request(url, 'GET', sleep_if_throttled=sleep_if_throttled)
-        self.handle_errors(response)
-        return MonkeyLearnResponse(response.json()['result'], [response])
-
-    def create(self, module_id, name, parent_id, sleep_if_throttled=True):
-        url = self.endpoint + module_id + '/categories/'
-        data = {
+    def create(self, model_id, name, parent_id=None, retry_if_throttled=True):
+        data = self.remove_none_value({
             'name': name,
             'parent_id': parent_id
-        }
-        response = self.make_request(url, 'POST', data, sleep_if_throttled)
-        self.handle_errors(response)
-        return MonkeyLearnResponse(response.json()['result'], [response])
+        })
+        url = self.get_nested_list_url(model_id)
+        response = self.make_request('POST', url, data, retry_if_throttled=retry_if_throttled)
+        return MonkeyLearnResponse(response)
 
-    def edit(self, module_id, category_id, name=None, parent_id=None, sleep_if_throttled=True):
-        url = self.endpoint + module_id + '/categories/' + str(category_id) + '/'
-        data = {
+    def edit(self, model_id, tag_id, name=None, parent_id=None, retry_if_throttled=True):
+        data = self.remove_none_value({
             'name': name,
             'parent_id': parent_id
-        }
-        data = {key: value for key, value in six.iteritems(data) if value is not None}
-        response = self.make_request(url, 'PATCH', data, sleep_if_throttled)
-        self.handle_errors(response)
-        return MonkeyLearnResponse(response.json()['result'], [response])
+        })
+        url = self.get_nested_detail_url(model_id, tag_id)
+        response = self.make_request('PATCH', url, data, retry_if_throttled=retry_if_throttled)
+        return MonkeyLearnResponse(response)
 
-    def delete(self, module_id, category_id, samples_strategy=None, samples_category_id=None,
-               sleep_if_throttled=True):
-        url = self.endpoint + module_id + '/categories/' + str(category_id) + '/'
-        data = {
-            'samples-strategy': samples_strategy,
-            'samples-category-id': samples_category_id
-        }
-        data = {key: value for key, value in six.iteritems(data) if value is not None}
-        response = self.make_request(url, 'DELETE', data, sleep_if_throttled)
-        self.handle_errors(response)
-        return MonkeyLearnResponse(response.json()['result'], [response])
+    def delete(self, model_id, tag_id, move_data_to=None, retry_if_throttled=True):
+        data = self.remove_none_value({
+            'move_data_to': move_data_to,
+        })
+        url = self.get_nested_detail_url(model_id, tag_id)
+        response = self.make_request('DELETE', url, data, retry_if_throttled=retry_if_throttled)
+        return MonkeyLearnResponse(response)

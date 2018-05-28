@@ -1,36 +1,45 @@
 # -*- coding: utf-8 -*-
-from __future__ import (
-    print_function, unicode_literals, division, absolute_import)
+from __future__ import print_function, unicode_literals, division, absolute_import
 
 from six.moves import range
-import six
 
-from monkeylearn.utils import SleepRequestsMixin, MonkeyLearnResponse, HandleErrorsMixin
-from monkeylearn.settings import DEFAULT_BASE_ENDPOINT, DEFAULT_BATCH_SIZE
+from monkeylearn.base import ModelEndpointSet
+from monkeylearn.settings import DEFAULT_BATCH_SIZE
+from monkeylearn.response import MonkeyLearnResponse
+from monkeylearn.validation import validate_batch_size
 
-class Extraction(SleepRequestsMixin, HandleErrorsMixin):
 
-    def __init__(self, token, base_endpoint=DEFAULT_BASE_ENDPOINT):
-        self.token = token
-        self.endpoint = base_endpoint + 'extractors/'
+class Extraction(ModelEndpointSet):
+    model_type = 'extractors'
 
-    def extract(self, module_id, text_list, batch_size=DEFAULT_BATCH_SIZE,
-                sleep_if_throttled=True, **kwargs):
-        text_list = list(text_list)
-        self.check_batch_limits(text_list, batch_size)
-        url = self.endpoint + module_id + '/extract/'
-        res = []
-        responses = []
-        for i in range(0, len(text_list), batch_size):
-            data = {
-                'text_list': text_list[i:i + batch_size]
-            }
-            if kwargs is not None:
-                for key, value in six.iteritems(kwargs):
-                    data[key] = value
-            response = self.make_request(url, 'POST', data, sleep_if_throttled)
-            self.handle_errors(response)
-            responses.append(response)
-            res.extend(response.json()['result'])
+    def list(self, page=1, per_page=20, retry_if_throttled=True):
+        url = self.get_list_url(query_string={'page': page, 'per_page': per_page})
+        response = self.make_request('GET', url, retry_if_throttled=retry_if_throttled)
+        return MonkeyLearnResponse(response)
 
-        return MonkeyLearnResponse(res, responses)
+    def detail(self, model_id, retry_if_throttled=True):
+        url = self.get_detail_url(model_id)
+        response = self.make_request('GET', url, retry_if_throttled=retry_if_throttled)
+        return MonkeyLearnResponse(response)
+
+    def extract(self, model_id, data, production_model=False, batch_size=DEFAULT_BATCH_SIZE,
+                retry_if_throttled=True, extra_args=None):
+        if extra_args is None:
+            extra_args = {}
+
+        validate_batch_size(batch_size)
+
+        url = self.get_detail_url(model_id, action='extract')
+
+        response = MonkeyLearnResponse()
+        for i in range(0, len(data), batch_size):
+            data_dict = self.remove_none_value({
+                'data': data[i:i + batch_size],
+                'production_model': production_model,
+            })
+            data_dict.update(extra_args)
+            raw_response = self.make_request('POST', url, data_dict,
+                                             retry_if_throttled=retry_if_throttled)
+            response.add_raw_response(raw_response)
+
+        return response
