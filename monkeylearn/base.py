@@ -46,7 +46,7 @@ class ModelEndpointSet(object):
         if data is not None:
             data = json.dumps(data)
 
-        retries_left = 2
+        retries_left = 3
         while retries_left:
             response = requests.request(method, url, data=data, headers={
                 'Authorization': 'Token ' + self.token,
@@ -71,6 +71,7 @@ class ModelEndpointSet(object):
                     continue
 
             return response
+        return response
 
     def remove_none_value(self, d):
         return {k: v for k, v in six.iteritems(d) if v is not None}
