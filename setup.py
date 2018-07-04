@@ -7,14 +7,14 @@ with open('README.md', 'r') as fh:
 
 setup(
     name='monkeylearn',
-    version='3.0.0',
+    version='3.0.1',
     author='MonkeyLearn',
     author_email='hello@monkeylearn.com',
     description='Official Python client for the MonkeyLearn API',
     long_description=long_description,
     long_description_content_type="text/markdown",
     url='https://github.com/monkeylearn/monkeylearn-python',
-    download_url='https://github.com/monkeylearn/monkeylearn-python/tarball/v3.0.0-pre',
+    download_url='https://github.com/monkeylearn/monkeylearn-python/tarball/v3.0.1',
     keywords=['monkeylearn', 'machine learning', 'python'],
     classifiers=[
         'Development Status :: 5 - Production/Stable',
