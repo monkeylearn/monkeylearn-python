@@ -57,6 +57,11 @@ class Classification(ModelEndpointSet):
         response = self.make_request('POST', url, retry_if_throttled=retry_if_throttled)
         return MonkeyLearnResponse(response)
 
+    def train(self, model_id, retry_if_throttled=True):
+        url = self.get_detail_url(model_id, action='train')
+        response = self.make_request('POST', url, retry_if_throttled=retry_if_throttled)
+        return MonkeyLearnResponse(response)
+
     def delete(self, model_id, retry_if_throttled=True):
         url = self.get_detail_url(model_id)
         response = self.make_request('DELETE', url, retry_if_throttled=retry_if_throttled)
