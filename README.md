@@ -390,6 +390,28 @@ response = ml.classifiers.deploy('[MODEL_ID]')
 
 <br>
 
+#### [Train](https://monkeylearn.com/api/v3/?shell#train)
+
+
+```python
+def MonkeyLearn.classifiers.train(model_id, retry_if_throttled=True)
+```
+
+Parameters:
+
+| Parameter          |Type               | Description                                               |
+|--------------------|-------------------|-----------------------------------------------------------|
+|*model_id*          |`str`              |Classifier ID. It always starts with `'cl'`, for example, `'cl_oJNMkt2V'`. |
+|*retry_if_throttled* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
+
+Example:
+
+```python
+response = ml.classifiers.train('[MODEL_ID]')
+```
+
+<br>
+
 #### [Tag detail](https://monkeylearn.com/api/v3/?shell#classify)
 
 
