@@ -60,10 +60,8 @@ class ModelEndpointSet(object):
                 error_code = body.get('error_code')
 
                 wait = None
-                if error_code == 'PLAN_RATE_LIMIT':
-                    wait = int(re.findall(r'(\d+) seconds', body['detail'])[0])
-                elif error_code == 'CONCURRENCY_RATE_LIMIT':
-                    wait = 2
+                if error_code in ('PLAN_RATE_LIMIT', 'CONCURRENCY_RATE_LIMIT'):
+                    wait = int(body.get('seconds_to_wait', 2))
 
                 if wait:
                     time.sleep(wait)

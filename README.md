@@ -176,14 +176,12 @@ for i in range(0, len(data), batch_size):
     retry = True
     while retry:
         try:
-            response = ml.classifiers.classify('[MODEL_ID]', batch_data, auto_batch=False,
+            retry = True
+            response = ml.classifiers.classify(classify_module_id, batch_data, auto_batch=False,
                                                retry_if_throttled=False)
-        except PlanRateLimitError:
-            retry = True
-            seconds = int(re.findall(r'(\d+) seconds', resoponse.body['detail'])[0])
-            sleep(seconds)
+        except PlanRateLimitError as e:
+            sleep(e.seconds_to_wait)
         except ConcurrencyRateLimitError:
-            retry = True
             sleep(2)
         except PlanQueryLimitError:
             raise

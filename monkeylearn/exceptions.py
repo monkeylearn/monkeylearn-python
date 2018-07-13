@@ -61,19 +61,22 @@ class ModelNotFound(ResourceNotFound):
 class TagNotFound(ResourceNotFound):
     pass
 
+
 # Rate limit (429)
-
-
-class RateLimitError(MonkeyLearnResponseException):
-    pass
 
 
 class PlanQueryLimitError(MonkeyLearnResponseException):
     pass
 
 
-class PlanRateLimitError(RateLimitError):
+class RateLimitError(MonkeyLearnResponseException):
     pass
+
+
+class PlanRateLimitError(RateLimitError):
+    def __init__(self, seconds_to_wait=60, *args, **kwargs):
+        self.seconds_to_wait = seconds_to_wait
+        super(RateLimitError, self).__init__(*args, **kwargs)
 
 
 class ConcurrencyRateLimitError(RateLimitError):

@@ -3,7 +3,9 @@ from __future__ import print_function, unicode_literals, division, absolute_impo
 
 import requests
 
-from monkeylearn.exceptions import MonkeyLearnResponseException, get_exception_class
+from monkeylearn.exceptions import (
+    MonkeyLearnResponseException, get_exception_class, PlanRateLimitError
+)
 
 
 class MonkeyLearnResponse(object):
@@ -77,10 +79,14 @@ class MonkeyLearnResponse(object):
 
         exception_class = get_exception_class(status_code=raw_response.status_code,
                                               error_code=body.get('error_code'))
-
-        raise exception_class(
+        exception_kwargs = dict(
             status_code=raw_response.status_code,
             detail=body.get('detail', 'Internal server error'),
             error_code=body.get('error_code'),
             response=self,
         )
+        if exception_class == PlanRateLimitError:
+            seconds_to_wait = int(body.get('seconds_to_wait', 60))
+            exception_kwargs['seconds_to_wait'] = seconds_to_wait
+
+        raise exception_class(**exception_kwargs)
