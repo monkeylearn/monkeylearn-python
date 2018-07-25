@@ -6,8 +6,7 @@ from six.moves import range
 from monkeylearn.base import ModelEndpointSet
 from monkeylearn.response import MonkeyLearnResponse
 from monkeylearn.settings import DEFAULT_BATCH_SIZE
-from monkeylearn.validation import validate_batch_size
-from monkeylearn.exceptions import MonkeyLearnException
+from monkeylearn.validation import validate_batch_size, validate_order_by_param
 
 
 class Classification(ModelEndpointSet):
@@ -19,8 +18,15 @@ class Classification(ModelEndpointSet):
             self._tags = Tags(self.token, self.base_url)
         return self._tags
 
-    def list(self, page=1, per_page=20, retry_if_throttled=True):
-        url = self.get_list_url(query_string={'page': page, 'per_page': per_page})
+    def list(self, page=None, per_page=None, order_by=None, retry_if_throttled=True):
+        if order_by is not None:
+            order_by = validate_order_by_param(order_by)
+        query_string = self.remove_none_value(dict(
+            page=page,
+            per_page=per_page,
+            order_by=order_by,
+        ))
+        url = self.get_list_url(query_string=query_string)
         response = self.make_request('GET', url, retry_if_throttled=retry_if_throttled)
         return MonkeyLearnResponse(response)
 

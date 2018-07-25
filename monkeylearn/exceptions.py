@@ -6,6 +6,14 @@ class MonkeyLearnException(Exception):
     pass
 
 
+class MonkeyLearnLocalException(MonkeyLearnException):
+    pass
+
+
+class LocalParamValidationError(MonkeyLearnLocalException):
+    pass
+
+
 class MonkeyLearnResponseException(MonkeyLearnException):
     def __init__(self, status_code=500, detail='Internal server error',
                  error_code=None, response=None):
