@@ -349,7 +349,7 @@ response = ml.classifiers.delete('[MODEL_ID]')
 
 
 ```python
-def MonkeyLearn.classifiers.list(page=1, per_page=20, retry_if_throttled=True)
+def MonkeyLearn.classifiers.list(page=1, per_page=20, order_by='-created', retry_if_throttled=True)
 ```
 
 Parameters:
@@ -358,6 +358,7 @@ Parameters:
 |--------------------|-------------------|-------------|
 |*page*              |`int`              |Specifies which page to get.|
 |*per_page*          |`int`              |Specifies how many items per page will be returned. |
+|*order_by*          |`string or list`   |Specifies the ordering criteria                     |
 |*retry_if_throttled* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
 
 Example:
@@ -602,7 +603,7 @@ response = ml.extractors.detail('[MODEL_ID]')
 
 
 ```python
-def MonkeyLearn.extractors.list(page=1, per_page=20, retry_if_throttled=True)
+def MonkeyLearn.extractors.list(page=1, per_page=20, order_by='-created', retry_if_throttled=True)
 ```
 
 Parameters:
@@ -611,6 +612,7 @@ Parameters:
 |--------------------|-------------------|-------------|
 |*page*              |`int`              |Specifies which page to get.|
 |*per_page*          |`int`              |Specifies how many items per page will be returned. |
+|*order_by*          |`string or list`   |Specifies the ordering criteria                     |
 |*retry_if_throttled* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
 
 Example:
