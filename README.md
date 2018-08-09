@@ -354,17 +354,17 @@ def MonkeyLearn.classifiers.list(page=1, per_page=20, order_by='-created', retry
 
 Parameters:
 
-|Parameter          |Type               | Description |
-|--------------------|-------------------|-------------|
-|*page*              |`int`              |Specifies which page to get.|
-|*per_page*          |`int`              |Specifies how many items per page will be returned. |
-|*order_by*          |`string or list`   |Specifies the ordering criteria                     |
+|Parameter            |Type               | Description |
+|-------------------- |-------------------|-------------|
+|*page*               |`int`              |Specifies which page to get.|
+|*per_page*           |`int`              |Specifies how many items per page will be returned. |
+|*order_by*           |`string or list`   |Specifies the ordering criteria. It can either be a *string* for single criteria ordering or a *list of strings* for more than one. Each *string* must be a valid field name; if you want inverse/descending order of the field prepend a `-` (dash) character. Some valid examples are: `'is_public'`, `'-name'` or `['-is_public', 'name']`. |
 |*retry_if_throttled* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
 
 Example:
 
 ```python
-response = ml.classifiers.list(page=2)
+response = ml.classifiers.list(page=2, per_page=5, order_by=['-is_public', 'name'])
 ```
 
 <br>
@@ -608,15 +608,15 @@ def MonkeyLearn.extractors.list(page=1, per_page=20, order_by='-created', retry_
 
 Parameters:
 
-|Parameter           |Type               | Description |
-|--------------------|-------------------|-------------|
-|*page*              |`int`              |Specifies which page to get.|
-|*per_page*          |`int`              |Specifies how many items per page will be returned. |
-|*order_by*          |`string or list`   |Specifies the ordering criteria                     |
+|Parameter            |Type               | Description |
+|---------------------|-------------------|-------------|
+|*page*               |`int`              |Specifies which page to get.|
+|*per_page*           |`int`              |Specifies how many items per page will be returned. |
+|*order_by*           |`string or list`   |Specifies the ordering criteria. It can either be a *string* for single criteria ordering or a *list of strings* for more than one. Each *string* must be a valid field name; if you want inverse/descending order of the field prepend a `-` (dash) character. Some valid examples are: `'is_public'`, `'-name'` or `['-is_public', 'name']`. |
 |*retry_if_throttled* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
 
 Example:
 
 ```python
-response = ml.extractors.list(page=2)
+response = ml.extractors.list(page=2, per_page=5, order_by=['-is_public', 'name'])
 ```
