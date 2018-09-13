@@ -19,6 +19,8 @@ class MonkeyLearnResponse(object):
         for rr in raw_responses:
             self.add_raw_response(rr)
 
+        self._cached_body = None
+
     def _get_last_request_header(self, header_name):
         try:
             last_response = self.raw_responses[-1]
@@ -47,13 +49,14 @@ class MonkeyLearnResponse(object):
 
     @property
     def body(self):
-        if self.request_count == 1:
-            if self.raw_responses[0].content:
-                return self.raw_responses[0].json()
+        if not self._cached_body:
+            if self.request_count == 1:
+                body = self.raw_responses[0].json() if self.raw_responses[0].content else None
             else:
-                return None
-        # Batched response, assume 2xx response bodies are lists (classify, extract)
-        return [result for rr in self.raw_responses for result in rr.json() if rr.content]
+                # Batched response, assume 2xx response bodies are lists (classify, extract)
+                body = [result for rr in self.raw_responses for result in rr.json() if rr.content]
+            self._cached_body = body
+        return self._cached_body
 
     def failed_raw_responses(self):
         return [r for r in self if r.status_code != requests.codes.ok]
@@ -66,6 +69,8 @@ class MonkeyLearnResponse(object):
             yield r
 
     def add_raw_response(self, raw_response):
+        # Invalidate cached body
+        self._cached_body = None
         self.raw_responses.append(raw_response)
         if raw_response.status_code != requests.codes.ok:
             self.raise_for_status(raw_response)
