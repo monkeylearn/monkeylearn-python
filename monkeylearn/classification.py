@@ -73,8 +73,8 @@ class Classification(ModelEndpointSet):
         response = self.make_request('DELETE', url, retry_if_throttled=retry_if_throttled)
         return MonkeyLearnResponse(response)
 
-    def create(self, name, description='', algorithm='nb', language='en', max_features=10000,
-               ngram_range=(1, 1), use_stemming=True, preprocess_numbers=True,
+    def create(self, name, description='', algorithm='svc', language='en', max_features=10000,
+               ngram_range=(1, 2), use_stemming=True, preprocess_numbers=True,
                preprocess_social_media=False, normalize_weights=True, stopwords=True,
                whitelist=None, retry_if_throttled=True):
         data = self.remove_none_value({
