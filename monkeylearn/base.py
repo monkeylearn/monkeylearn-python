@@ -1,15 +1,20 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function, unicode_literals, division, absolute_import
 
-import re
 import json
 import time
+import pkg_resources
 
 import six
 from six.moves.urllib.parse import urlencode
 import requests
 
 from monkeylearn.settings import DEFAULT_BASE_URL
+
+try:
+    version = pkg_resources.get_distribution('monkeylearn').version
+except Exception:
+    version = 'noversion'
 
 
 class ModelEndpointSet(object):
@@ -48,9 +53,11 @@ class ModelEndpointSet(object):
 
         retries_left = 3
         while retries_left:
+
             response = requests.request(method, url, data=data, params=params, headers={
                 'Authorization': 'Token ' + self.token,
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'User-Agent': 'python-sdk-{}'.format(version),
             })
 
             if response.content:
