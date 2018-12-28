@@ -4,6 +4,7 @@ from __future__ import print_function, unicode_literals, division, absolute_impo
 from monkeylearn.settings import DEFAULT_BASE_URL
 from monkeylearn.classification import Classification
 from monkeylearn.extraction import Extraction
+from monkeylearn.workflows import Workflows
 
 
 class MonkeyLearn(object):
@@ -22,3 +23,9 @@ class MonkeyLearn(object):
         if not hasattr(self, '_extractors'):
             self._extractors = Extraction(token=self.token, base_url=self.base_url)
         return self._extractors
+
+    @property
+    def workflows(self):
+        if not hasattr(self, '_workflows'):
+            self._workflows = Workflows(token=self.token, base_url=self.base_url)
+        return self._workflows

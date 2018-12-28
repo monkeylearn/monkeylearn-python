@@ -42,13 +42,13 @@ class ModelEndpointSet(object):
         url = '{}{}/'.format(self.get_nested_list_url(parent_id, action=None), children_id)
         return self._add_action_or_query_string(url, action, query_string)
 
-    def make_request(self, method, url, data=None, retry_if_throttled=True):
+    def make_request(self, method, url, data=None, retry_if_throttled=True, params=None):
         if data is not None:
             data = json.dumps(data)
 
         retries_left = 3
         while retries_left:
-            response = requests.request(method, url, data=data, headers={
+            response = requests.request(method, url, data=data, params=params, headers={
                 'Authorization': 'Token ' + self.token,
                 'Content-Type': 'application/json'
             })
