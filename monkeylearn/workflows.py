@@ -21,12 +21,12 @@ class Workflows(ModelEndpointSet):
         return self._data
 
     @property
-    def metadata(self):
-        if not hasattr(self, '_metadata'):
-            self._metadata = WorkflowMetadata(self.token, self.base_url)
-        return self._metadata
+    def custom_fields(self):
+        if not hasattr(self, '_custom_fields'):
+            self._custom_fields = WorkflowCustomFields(self.token, self.base_url)
+        return self._custom_fields
 
-    def create(self, name, db_name, steps, description='', webhook_url=None, metadata=None,
+    def create(self, name, db_name, steps, description='', webhook_url=None, custom_fields=None,
                sources=None, actions=None, retry_if_throttled=True):
         data = self.remove_none_value({
             'name': name,
@@ -34,7 +34,7 @@ class Workflows(ModelEndpointSet):
             'db_name': db_name,
             'webhook_url': webhook_url,
             'steps': steps,
-            'metadata': metadata,
+            'custom_fields': custom_fields,
             'sources': sources,
             'actions': actions,
         })
@@ -92,8 +92,8 @@ class WorkflowData(ModelEndpointSet):
         return MonkeyLearnResponse(response)
 
 
-class WorkflowMetadata(ModelEndpointSet):
-    model_type = ('workflows', 'metadata')
+class WorkflowCustomFields(ModelEndpointSet):
+    model_type = ('workflows', 'custom-fields')
 
     def create(self, model_id, name, data_type, retry_if_throttled=True):
         data = {'name': name, 'type': data_type}
