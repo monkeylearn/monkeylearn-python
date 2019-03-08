@@ -10,7 +10,7 @@ with open(path.join(this_directory, 'README.md')) as f:
 
 setup(
     name='monkeylearn',
-    version='3.2.4',
+    version='3.4.0',
     author='MonkeyLearn',
     author_email='hello@monkeylearn.com',
     description='Official Python client for the MonkeyLearn API',
