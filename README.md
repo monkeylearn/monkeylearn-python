@@ -127,7 +127,7 @@ Available exceptions:
 | `PlanQueryLimitError`       | You have reached the monthly query limit for your plan. Consider upgrading your plan. More about [Plan query limits](https://monkeylearn.com/api/v3/#query-limits). |
 | `PlanRateLimitError`        | You have sent too many requests in the last minute. Check the exception detail. More about [Plan rate limit](https://monkeylearn.com/api/v3/#plan-rate-limit). |
 | `ConcurrencyRateLimitError` | You have sent too many requests in the last second. Check the exception detail. More about [Concurrency rate limit](https://monkeylearn.com/api/v3/#concurrecy-rate-limit). |
-| `ModuleStateError`          | The state of the module is invalid. Check the exception detail.  |
+| `ModelStateError`           | The state of the model is invalid. Check the exception detail.  |
 
 
 ### Auto-batching
@@ -162,7 +162,6 @@ else:
 This is very convenient and usually should be enough. If you need more flexibility, you can manage batching and rate limits yourself.
 
 ``` python
-import re
 from time import sleep
 from monkeylearn.exceptions import PlanQueryLimitError, ConcurrencyRateLimitError, PlanRateLimitError
 
@@ -177,7 +176,7 @@ for i in range(0, len(data), batch_size):
     while retry:
         try:
             retry = True
-            response = ml.classifiers.classify(classify_module_id, batch_data, auto_batch=False,
+            response = ml.classifiers.classify('[MODEL_ID]', batch_data, auto_batch=False,
                                                retry_if_throttled=False)
         except PlanRateLimitError as e:
             sleep(e.seconds_to_wait)
