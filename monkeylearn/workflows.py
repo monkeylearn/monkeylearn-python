@@ -72,6 +72,11 @@ class WorkflowSteps(ModelEndpointSet):
         response = self.make_request('POST', url, data, retry_if_throttled=retry_if_throttled)
         return MonkeyLearnResponse(response)
 
+    def delete(self, model_id, step_id, retry_if_throttled=True):
+        url = self.get_nested_list_url(model_id, step_id)
+        response = self.make_request('DELETE', url, retry_if_throttled=retry_if_throttled)
+        return MonkeyLearnResponse(response)
+
 
 class WorkflowData(ModelEndpointSet):
     model_type = ('workflows', 'data')
