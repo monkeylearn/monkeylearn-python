@@ -27,7 +27,7 @@ class Workflows(ModelEndpointSet):
         return self._custom_fields
 
     def create(self, name, db_name, steps, description='', webhook_url=None, custom_fields=None,
-               sources=None, actions=None, retry_if_throttled=True):
+               sources=None, retry_if_throttled=True):
         data = self.remove_none_value({
             'name': name,
             'description': description,
@@ -35,8 +35,7 @@ class Workflows(ModelEndpointSet):
             'webhook_url': webhook_url,
             'steps': steps,
             'custom_fields': custom_fields,
-            'sources': sources,
-            'actions': actions,
+            'sources': sources
         })
         url = self.get_list_url()
         response = self.make_request('POST', url, data, retry_if_throttled=retry_if_throttled)
@@ -56,7 +55,13 @@ class Workflows(ModelEndpointSet):
 class WorkflowSteps(ModelEndpointSet):
     model_type = ('workflows', 'steps')
 
-    def create(self, model_id, step_model_id, name, input_step=None, conditions=None, retry_if_throttled=True):
+    def detail(self, model_id, step_id, retry_if_throttled=True):
+        url = self.get_nested_list_url(model_id, step_id)
+        response = self.make_request('GET', url, retry_if_throttled=retry_if_throttled)
+        return MonkeyLearnResponse(response)
+
+    def create(self, model_id, step_model_id, name, input_step=None, conditions=None,
+               retry_if_throttled=True):
         data = self.remove_none_value({
             'name': name,
             'model_id': step_model_id,
@@ -88,7 +93,8 @@ class WorkflowData(ModelEndpointSet):
             'per_page': per_page,
         })
         url = self.get_nested_list_url(model_id)
-        response = self.make_request('GET', url, params=params, retry_if_throttled=retry_if_throttled)
+        response = self.make_request('GET', url, params=params,
+                                     retry_if_throttled=retry_if_throttled)
         return MonkeyLearnResponse(response)
 
 
