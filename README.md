@@ -620,3 +620,239 @@ Example:
 ```python
 response = ml.extractors.list(page=2, per_page=5, order_by=['-is_public', 'name'])
 ```
+
+### Workflows
+
+#### [Workflow detail](https://monkeylearn.com/api/v3/#workflow-detail)
+
+```python
+def MonkeyLearn.workflows.detail(model_id, step_id, retry_if_throttled=True)
+```
+
+Parameters:
+
+| Parameter          |Type               | Description                                               |
+|--------------------|-------------------|-----------------------------------------------------------|
+|*model_id*          |`str`              |Workflow ID. It always starts with `'wf'`, for example, `'wf_oJNMkt2V'`. |
+|*step_id*          |`int`              |Step ID. |
+|*retry_if_throttled* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
+
+Example:
+
+```python
+response = ml.workflows.detail('[MODEL_ID]', '[STEP_ID]')
+```
+
+<br>
+
+#### [Create workflow](https://monkeylearn.com/api/v3/#create-workflow)
+
+```python
+def MonkeyLearn.workflows.create(name, db_name, steps, description='', webhook_url=None,
+                                 custom_fields=None, sources=None, retry_if_throttled=True)
+```
+
+Parameters:
+
+Parameter | Type | Description
+--------- | ------- | -----------
+*name* | `str` | The name of the model.
+*db_name* | `str` | The name of the database where the data will be stored. The name must not already be in use by another database.
+*steps*  | `list[dict]` | A list of step dicts.
+*description*  | `str` | The description of the model.
+*webhook_url*  | `str` | An URL that will be called when an action is triggered.
+*custom_fields*   | `[]`| A list of custom_field dicts that represent user defined fields that come with the input data and that will be saved. It does not include the mandatory `text` field.
+*sources*  | `{}` | An object that represents the data sources of the workflow.
+
+Example:
+
+```python
+response = ml.workflows.create(
+    name='Example Workflow',
+    db_name='example_workflow',
+    steps=[{
+        name: 'sentiment',
+        model_id: 'cl_pi3C7JiL'
+    }, {
+        name: 'keywords',
+        model_id: 'ex_YCya9nrn'
+    }])
+```
+
+<br>
+
+#### [Delete workflow](https://monkeylearn.com/api/v3/#delete-workflow)
+
+```python
+def MonkeyLearn.workflows.delete(model_id, retry_if_throttled=True)
+```
+
+Parameters:
+
+| Parameter          |Type               | Description                                               |
+|--------------------|-------------------|-----------------------------------------------------------|
+|*model_id*          |`str`              |Workflow ID. It always starts with `'wf'`, for example, `'wf_oJNMkt2V'`. |
+|*retry_if_throttled* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
+
+Example:
+
+```python
+response = ml.workflows.delete('[MODEL_ID]')
+```
+
+<br>
+
+#### [Step detail](https://monkeylearn.com/api/v3/#step-detail)
+
+```python
+def MonkeyLearn.workflows.steps.detail(model_id, step_id, retry_if_throttled=True)
+```
+
+Parameters:
+
+| Parameter          |Type               | Description                                               |
+|--------------------|-------------------|-----------------------------------------------------------|
+|*model_id*          |`str`              |Workflow ID. It always starts with `'wf'`, for example, `'wf_oJNMkt2V'`. |
+|*step_id*       |`int`              |Step ID. |
+|*retry_if_throttled* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
+
+Example:
+
+``` python
+response = ml.workflows.steps.detail('[MODEL_ID]', STEP_ID)
+```
+
+<br>
+
+#### [Create step](https://monkeylearn.com/api/v3/#create-step)
+
+```python
+def MonkeyLearn.workflows.steps.create(model_id, name, step_model_id, input=None,
+                                         conditions=None, retry_if_throttled=True)
+```
+
+Parameters:
+
+| Parameter          |Type               | Description                                               |
+|--------------------|-------------------|-----------------------------------------------------------|
+|*model_id*          |`str`              |Workflow ID. It always starts with `'wf'`, for example, `'wf_oJNMkt2V'`. |
+|*name*              |`str`              |The name of the new step. |
+|*step_model_id*              |`str`              |The ID of the MonkeyLearn model that will run in this step. Must be an existing classifier or extractor. |
+|*input*              |`str`              |Where the input text to use in this step comes from. It can be either the name of a step or `input_data` (the default), which means that the input will be the original text. |
+|*conditions*              |`list[dict]`              |A list of condition dicts that indicate whether this step should execute or not. All the conditions in the list must be true for the step to execute. |
+|*retry_if_throttled* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
+
+Example:
+
+```python
+response = ml.workflows.steps.create(model_id='[MODEL_ID]',  name='sentiment',
+                                     step_model_id='cl_pi3C7JiL')
+```
+
+<br>
+
+#### [Delete step](https://monkeylearn.com/api/v3/#delete-step)
+
+```python
+def MonkeyLearn.workflows.steps.delete(model_id, step_id, retry_if_throttled=True)
+```
+
+Parameters:
+
+| Parameter          |Type               | Description                                               |
+|--------------------|-------------------|-----------------------------------------------------------|
+|*model_id*          |`str`              |Workflow ID. It always starts with `'wf'`, for example, `'wf_oJNMkt2V'`. |
+|*step_id*       |`int`              |Step ID. |
+|*retry_if_throttled* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
+
+Example:
+
+```python
+response = ml.workflows.steps.delete('[MODEL_ID]', STEP_ID)
+```
+
+<br>
+
+#### [Upload workflow data](https://monkeylearn.com/api/v3/#upload-workflow-data)
+
+```python
+def MonkeyLearn.workflows.data.create(model_id, data, retry_if_throttled=True)
+```
+
+Parameters:
+
+| Parameter          |Type               | Description                                               |
+|--------------------|-------------------|-----------------------------------------------------------|
+|*model_id*          |`str`              |Workflow ID. It always starts with `'wf'`, for example, `'wf_oJNMkt2V'`. |
+|*data*              |`list[dict]`        |A list of dicts with the keys described below.
+|*retry_if_throttled* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
+
+`data` dict keys:
+
+|Key             | Description |
+|---------       | ----------- |
+|text | A *string* of the text to upload.|
+|[custom field name] | The value for a custom field for this text. The type of the value must be the one specified when the field was created.|
+
+
+Example:
+
+```python
+response = ml.workflows.data.create(
+    model_id='[MODEL_ID]',
+    data=[{'text': 'text 1', 'rating': 3},
+          {'text': 'text 2', 'rating': 4}]
+)
+```
+
+<br>
+
+#### [List workflow data](https://monkeylearn.com/api/v3/#list-workflow-data)
+
+```python
+def MonkeyLearn.workflows.data.list(model_id, batch_id=None, is_processed=None,
+                                    sent_to_process_date_from=None, sent_to_process_date_to=None,
+                                    page=None, per_page=None, retry_if_throttled=True)
+```
+
+Parameters:
+
+Parameter                            | Type | Description
+---------                            | ------- | -----------
+page     | `int`        | The page number to be retrieved.
+per_page | `int`       | The maximum number of items the page should have. The maximum allowed value is `50`.
+batch_id | `int` | The ID of the batch to retrieve. If unspecified, data from all batches is shown.
+is_processed | `bool` | Whether to return data that has been processed or data that has not been processed yet. If unspecified, both are shown indistinctly.
+sent_to_process_date_from | `str` | An [ISO formatted date](https://en.wikipedia.org/wiki/ISO_8601) which specifies the oldest `sent_date` of the data to be retrieved.
+sent_to_process_date_to | `str` | An [ISO formatted date](https://en.wikipedia.org/wiki/ISO_8601) which specifies the most recent `sent_date` of the data to be retrieved.
+
+Example:
+
+```python
+response = ml.workflows.data.list('[MODEL_ID]', batch_id=1839, page=1)
+```
+
+<br>
+
+#### [Create custom field](https://monkeylearn.com/api/v3/#create-custom-field)
+
+
+```python
+def MonkeyLearn.workflows.custom_fields.create(model_id, name, data_type, retry_if_throttled=True)
+```
+
+Parameters:
+
+| Parameter          |Type               | Description                                               |
+|--------------------|-------------------|-----------------------------------------------------------|
+|*model_id*          |`str`              |Workflow ID. It always starts with `'wf'`, for example, `'wf_oJNMkt2V'`. |
+|*name*              |`str`              |The name of the new custom field. |
+|*data_type*              |`str`              |The type of the data of the field. It must be one of `string`, `date`, `text`, `integer`, `float`, `bool`. |
+|*retry_if_throttled* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
+
+Example:
+
+```python
+response = ml.workflows.custom_fields.create(model_id='[MODEL_ID]',  name='rating',
+                                             data_type='integer')
+```
