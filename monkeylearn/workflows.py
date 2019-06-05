@@ -60,12 +60,12 @@ class WorkflowSteps(ModelEndpointSet):
         response = self.make_request('GET', url, retry_if_throttled=retry_if_throttled)
         return MonkeyLearnResponse(response)
 
-    def create(self, model_id, step_model_id, name, input_step=None, conditions=None,
+    def create(self, model_id, name, step_model_id, input=None, conditions=None,
                retry_if_throttled=True):
         data = self.remove_none_value({
             'name': name,
             'model_id': step_model_id,
-            'input_step': input_step,
+            'input': input,
             'conditions': conditions,
         })
         url = self.get_nested_list_url(model_id)
