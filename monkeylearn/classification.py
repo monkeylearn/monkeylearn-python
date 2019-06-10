@@ -113,9 +113,15 @@ class Classification(ModelEndpointSet):
 
         return response
 
-    def upload_data(self, model_id, data, retry_if_throttled=True):
+    def upload_data(self, model_id, data, input_duplicates_strategy=None,
+                    existing_duplicates_strategy=None, retry_if_throttled=True):
         url = self.get_detail_url(model_id, action='data')
         data_dict = {'data': data}
+        data_dict = self.remove_none_value({
+            'data': data,
+            'input_duplicates_strategy': input_duplicates_strategy,
+            'existing_duplicates_strategy': existing_duplicates_strategy
+        })
         response = self.make_request('POST', url, data_dict, retry_if_throttled=retry_if_throttled)
         return MonkeyLearnResponse(response)
 

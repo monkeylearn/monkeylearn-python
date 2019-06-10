@@ -523,6 +523,8 @@ Parameters:
 |--------------------|-------------------|-----------------------------------------------------------|
 |*model_id*          |`str`              |Classifier ID. It always starts with `'cl'`, for example, `'cl_oJNMkt2V'`. |
 |*data*              |`list[dict]`        |A list of dicts with the keys described below.
+|*input_duplicates_strategy*              |`str`        | Indicates what to do with duplicate texts in this request. Must be one of `merge`, `keep_first` or `keep_last`.
+|*existing_duplicates_strategy*              |`str`        | Indicates what to do with texts of this request that already exist in the model. Must be one of `overwrite` or `ignore`.
 |*retry_if_throttled* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
 
 `data` dict keys:
