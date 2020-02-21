@@ -134,19 +134,17 @@ class Tags(ModelEndpointSet):
         response = self.make_request('GET', url, retry_if_throttled=retry_if_throttled)
         return MonkeyLearnResponse(response)
 
-    def create(self, model_id, name, parent_id=None, retry_if_throttled=True):
+    def create(self, model_id, name, retry_if_throttled=True):
         data = self.remove_none_value({
             'name': name,
-            'parent_id': parent_id
         })
         url = self.get_nested_list_url(model_id)
         response = self.make_request('POST', url, data, retry_if_throttled=retry_if_throttled)
         return MonkeyLearnResponse(response)
 
-    def edit(self, model_id, tag_id, name=None, parent_id=None, retry_if_throttled=True):
+    def edit(self, model_id, tag_id, name=None, retry_if_throttled=True):
         data = self.remove_none_value({
             'name': name,
-            'parent_id': parent_id
         })
         url = self.get_nested_detail_url(model_id, tag_id)
         response = self.make_request('PATCH', url, data, retry_if_throttled=retry_if_throttled)

@@ -439,7 +439,7 @@ response = ml.classifiers.tags.detail('[MODEL_ID]', TAG_ID)
 
 
 ```python
-def MonkeyLearn.classifiers.tags.create(model_id, name, parent_id=None, retry_if_throttled=True)
+def MonkeyLearn.classifiers.tags.create(model_id, name, retry_if_throttled=True)
 ```
 
 Parameters:
@@ -448,7 +448,6 @@ Parameters:
 |--------------------|-------------------|-----------------------------------------------------------|
 |*model_id*          |`str`              |Classifier ID. It always starts with `'cl'`, for example, `'cl_oJNMkt2V'`. |
 |*name*              |`str`              |The name of the new tag. |
-|*parent_id*         |`int`              |**DEPRECATED** (only for v2 models). The ID of the parent tag. |
 |*retry_if_throttled* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
 
 Example:
@@ -463,7 +462,7 @@ response = ml.classifiers.tags.create('[MODEL_ID]', 'Positive')
 
 
 ```python
-def MonkeyLearn.classifiers.tags.edit(model_id, tag_id, name=None, parent_id=None,
+def MonkeyLearn.classifiers.tags.edit(model_id, tag_id, name=None,
                                       retry_if_throttled=True)
 ```
 
@@ -474,7 +473,6 @@ Parameters:
 |*model_id*          |`str`              |Classifier ID. It always starts with `'cl'`, for example, `'cl_oJNMkt2V'`. |
 |*tag_id*       |`int`              |Tag ID. |
 |*name*              |`str`              |The new name of the tag. |
-|*parent_id*         |`int`              |**DEPRECATED** (only for v2 models). The new parent tag ID. |
 |*retry_if_throttled* |`bool`             |If a request is [throttled](https://monkeylearn.com/api/v3/#query-limits), sleep and retry the request. |
 
 Example:
