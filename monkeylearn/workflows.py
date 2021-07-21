@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function, unicode_literals, division, absolute_import
 
+import warnings
+
 from monkeylearn.base import ModelEndpointSet
 from monkeylearn.response import MonkeyLearnResponse
 
@@ -28,10 +30,11 @@ class Workflows(ModelEndpointSet):
 
     def create(self, name, db_name, steps, description='', webhook_url=None, custom_fields=None,
                sources=None, retry_if_throttled=True):
+        if db_name:
+            warnings.warn('Note: db_name parameter is ignored by the API and will be removed soon')
         data = self.remove_none_value({
             'name': name,
             'description': description,
-            'db_name': db_name,
             'webhook_url': webhook_url,
             'steps': steps,
             'custom_fields': custom_fields,
